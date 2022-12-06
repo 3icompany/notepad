@@ -78,14 +78,22 @@
 </head>
 
 <body class="notepad-on">
+  <!-- vuong -->
+  <div id="login_room">
+
+  </div>
   <!-- LOADING -->
   <div id="cc-loading"><span></span></div>
+
+
 
   <!-- INPUT CURENT URL -->
   <input type="hidden" class="current_url" value="index.html">
 
   <!-- ONLINE LEARNING -->
   <div id="online-learning">
+
+
     <div class="container-fluid">
 
       <!-- MENU -->
@@ -295,9 +303,10 @@
                   Login
                 </span>
               </a>
+              <!-- vuong -->
               <!-- form login -->
               <div id="modal-wrapper" class="modal" style="display: block;">
-                <div class="modal-content animate" style="top: 10%;">
+                <div class="modal-content animate" style="top: 10%;" id="login-modal">
                   <div class="imgcontainer">
                     <span onclick="document.getElementById('modal-wrapper').style.display ='none'" class="close-login login-hover" title="Close PopUp">&times;</span>
                     <img src="assets/images/login/1.png" alt="Avatar" class="avatar">
@@ -311,9 +320,23 @@
                     <button class="rounded" id="btn_login" type="submit">Login</button>
                   </div>
                 </div>
+                
+                <div id="create_room" class="modal-content animate hidden" style="top: 20%;">
+                  <p style="padding: 20px;font-size: medium;text-align: center;">Select room</p>
+                  <div class="" style="margin: 0 30px;">
+                    <select name="room" id="room" class="rounded" style="height: 30px;margin: 12px 0px;width: 100%;" ></select>
+                  <div class="" style="display: flex;justify-content: center;margin-top: 20px;">
+                    <div class="">
+                      <button class="rounded" id="btn_create_room" style="padding: 10px;margin-right: 50px;">Create room</button>
+                      <button class="rounded" id="btn_join_room"  style="padding: 10px;">Join room</button>
+                    </div>
+                  </div>
+                  </div>
+                </div>
               </div>
 
             </div>
+
 
             <!-- MODE -->
             <div class="tb-mode">
@@ -559,7 +582,8 @@
                         <li class="icon-layer btn-delete-layer border-bottom">
                           <img src="assets/images/notepad/layer/delete.png" />
                         </li>
-                        <li class="icon-layer icon-selector active" data-cnt="1">
+                        <!-- vuong -->
+                        <li class="icon-layer icon-selector active" data-cnt="1" data-id="1">
                           <img src="assets/images/notepad/layer/layer-1.png" />
                         </li>
                       </ul>
@@ -1247,6 +1271,7 @@
 
 
       <!-- DRAWING -->
+      <div style="position: relative;">
       <div class="row wrapper_contend" id="wrapper">
 
         <div class="col-12 main-content main-notepad">
@@ -1823,7 +1848,7 @@
               <button id="mic-close" type="button" class="btn btn-danger">X</button>
             </div>
             <input id="mic-file" class="hidden" type="file" name="mic-file" accept="audio/*">
-            <audio crossorigin="anonymous" id="micRecorded" src="" controls></audio>
+            <audio id="micRecorded" src="" controls></audio>
 
             <div class="edit-form-svg">
               <div class="btn-toolbar btn-group">
@@ -2135,7 +2160,7 @@
           </div>
         </div>
 
-        <div class="wrap-sidebar-left" style="right: -340px;">
+        <div class="wrap-sidebar-left">
           <div class="menu-tray show-both" style="overflow-y: scroll;">
             <div style="width: 100%; height: 4px; background: inherit;"></div>
             <a id="userListDropDown" data-toggle="none" style="cursor: pointer;">
@@ -2145,7 +2170,7 @@
               </div>
 
             </a>
-            <div id="userListContainer" class="attend-list style-scrollbar scroll" style="display: none; height: fit-content; padding: 0; padding-top: 12px; max-height: 250px;">
+            <div id="userListContainer" class="attend-list style-scrollbar scroll" style="display: block; height: fit-content; padding: 0; padding-top: 12px; max-height: 250px;">
               <div class="row list_participants">
                 <ul id="listUsers">
 
@@ -2177,7 +2202,10 @@
               <span><i class="fa fa-chevron-down" aria-hidden="true"></i></span>
             </div>
             <div id="zoomChatContainer" class="attend-list style-scrollbar" style="display: none; height: fit-content; padding: 0; position: relative; padding-top: 12px;">
-              <div id="meetingSDKChatElement" style="z-index: 0;"></div>
+              <div id="meetingSDKChatElement"></div>
+
+              <span class="zoom-chat-btn"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></span>
+              <!-- <textarea id="test-chat" name="" id="" cols="30" rows="10"></textarea> -->
             </div>
 
             <!-- <div class="chat_box" style="display: block;">
@@ -2225,7 +2253,7 @@
           </div>
         </div>
 
-      </div>
+      </div></div>
     </div>
 
     <!-- <div class="popUpBtn">

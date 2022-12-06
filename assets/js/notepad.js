@@ -4,8 +4,8 @@ var backgroundColorCanvas = "";
     var url = 'https://nodejs.3i.com.vn'; //Use when run on publish
     // var nodeServer = 'http://127.0.0.1:3000'; //Use when run on local
     // var url = 'http://localhost:3001';
-    // var url = 'https://localhost:3000';
-    var plugin_url = 'https://notepad.s-work.vn/v3/';
+    // var url = 'http://localhost:3000';
+    var plugin_url = 'https://notepad.s-work.vn/v3/';//
     var stanza = 999999;
     var lengthObject = 0;
     var controlpencil = true;
@@ -154,6 +154,7 @@ var backgroundColorCanvas = "";
         getTop: () => canvas.viewportTransform[5],
     });
     console.log('canvas load');
+    console.log('sigma8@123');
 
     let line,
         triangle,
@@ -220,6 +221,8 @@ var backgroundColorCanvas = "";
         'blink',
         'lineStyle',
         'lineType',
+        'lockMovementX',
+        'lockMovementY',
         'customProps',
         'funct',
         'coord_x1',
@@ -406,6 +409,19 @@ var backgroundColorCanvas = "";
 
 
             $('#edit-form').css({ 'visibility': 'visible', 'top': top + 'px', 'left': left + 'px' });
+
+            const hideItems = ['lineStyle', 'textColor', 'borderColor', 'borderWidth', 'curve']
+            if (obj.name === 'image') {
+
+                hideItems.forEach(item => {
+                    $(`#sub-menu-${item}`).hide()
+                })
+            }
+            else {
+                hideItems.forEach(item => {
+                    $(`#sub-menu-${item}`).show()
+                })
+            }
         } else {
             hidePopupMenu();
         }
@@ -428,7 +444,7 @@ var backgroundColorCanvas = "";
                 name: 'textBoxEditor'
             })
 
-            // console.log(textForEditing);
+            console.log(textForEditing);
             // hide group inside text
             obj.visible = false;
             // note important, text cannot be hidden without this
@@ -466,7 +482,7 @@ var backgroundColorCanvas = "";
                     // fontFamily: textForEditing.fontFamily,
                     textAlign: "center",
                 });
-                // console.log('test', object, obj);
+                console.log('test', object, obj);
                 // comment before, you must call this
                 // object.addWithUpdate();
 
@@ -481,7 +497,7 @@ var backgroundColorCanvas = "";
             })
             object.clicked = false;
         } else {
-            // console.log('here 2');
+            console.log('here 2');
 
             // object.set({
             //     width: object.item(0).width,
@@ -490,7 +506,7 @@ var backgroundColorCanvas = "";
 
             canvas.requestRenderAll();
 
-            // console.log('obj', object);
+            console.log('obj', object);
 
             objectMiro = object;
             object.clicked = true;
@@ -678,7 +694,7 @@ var backgroundColorCanvas = "";
                     });
                 } else if (obj.name == 'line-style') {
                     if (obj.type == 'wavy-line-with-arrow') {
-                        console.log(obj);
+                        console.log('obj',obj);
                         obj._objects = [];
                         obj.objects = [];
                         obj.updateInternalPointsData();
@@ -788,7 +804,8 @@ var backgroundColorCanvas = "";
     }
 
     function loadLayerCanvasJsonNew(arr, canvas) {
-        console.log('load layer canvas', arr, canvas.id);
+        console.log(`  ~ arr, canvas`, arr, canvas.id)
+        // console.log('load layer canvas', arr, canvas.id);// vuong
         var groups = []
         for (let index = 0; index < arr.length; index++) {
             if (arr[index].data && arr[index].layer == canvas.id) {
@@ -968,7 +985,7 @@ var backgroundColorCanvas = "";
                                 }, null, { crossOrigin: 'anonymous' });
                             } else if (obj.name == 'line-style') {
                                 if (obj.type == 'wavy-line-with-arrow') {
-                                    console.log(obj);
+                                    console.log('obj',obj);
                                     obj._objects = [];
                                     obj.objects = [];
                                     obj.updateInternalPointsData();
@@ -1026,7 +1043,7 @@ var backgroundColorCanvas = "";
                 }
             }
         }
-        console.log(groups);
+        console.log('groups',groups);
 
         groups.forEach(g => {
             const grp = pool_data.find(o => o.objectID === g.id)
@@ -1039,6 +1056,7 @@ var backgroundColorCanvas = "";
         })
         canvas.renderAll();
     }
+    
     function makeChildSelectable(obj) {
         obj.subTargetCheck = true;
         var listObject = obj._objects;
@@ -1129,7 +1147,7 @@ var backgroundColorCanvas = "";
                         obj.on('mouseup', handleMouseUpSvg);
                         startActiveMedia(obj);
                     }
-                    // console.log(obj);
+                    console.log('obj',obj);
                     canvas.add(obj);
                 } else if (obj.type === 'group') {
                     if (obj.name != 'custom-group') {
@@ -1189,7 +1207,7 @@ var backgroundColorCanvas = "";
                     canvas.add(obj);
                 } else if (obj.type === 'image') {
                     fabric.Image.fromURL(obj.src, function (img) {
-                        console.log(obj);
+                        console.log('obj',obj);
                         img.set({
                             top: obj.top,
                             left: obj.left,
@@ -1230,7 +1248,7 @@ var backgroundColorCanvas = "";
                     });
                 } else if (obj.name == 'line-style') {
                     if (obj.type == 'wavy-line-with-arrow') {
-                        console.log(obj);
+                        console.log('obj',obj);
                         obj._objects = [];
                         obj.objects = [];
                         obj.updateInternalPointsData();
@@ -1525,6 +1543,24 @@ var backgroundColorCanvas = "";
         $(`.attach-file-popup-class .list`)[0].appendChild(li);
     }
 
+    $(".zoom-chat-btn").click(function() {
+        // var e = $.Event("keypress");
+        // e.which = 13; //choose the one you want
+        // e.keyCode = 13;
+        // console.dir($("#meetingSDKChatElement textarea")[0]);
+        // $("#meetingSDKChatElement textarea").trigger(e);
+        var keyboardEvent = new KeyboardEvent('keydown', {
+            code: 'Enter',
+            key: 'Enter',
+            charKode: 13,
+            keyCode: 13,
+            view: window
+        });
+    
+        // $("#meetingSDKChatElement textarea")[0].dispatchEvent(keyboardEvent);
+        $("#test-chat")[0].dispatchEvent(keyboardEvent);
+    })
+
     var zoomConfig
     var isInitZoomClient = false
     var isZoomFull = false;
@@ -1615,6 +1651,7 @@ var backgroundColorCanvas = "";
             }, 1000);
         });
     }
+    let showSidebar = false;
     /**
      * Hanlde popup and display info from zoom sdk
      * @author PhamVanPhuc
@@ -1626,6 +1663,7 @@ var backgroundColorCanvas = "";
         $('#zoom-list').addClass('hidden');
 
         $("#loading-modal")[0].classList.remove("hidden");
+        if (!showSidebar) $('#btn-send')[0].click();
 
         await initZoomClient();
         console.log('init success');
@@ -1638,27 +1676,42 @@ var backgroundColorCanvas = "";
                 password: config.password,
                 userName: config.username
             });
+
+            var expiresTimeId = setTimeout(() => {
+                client.leaveMeeting()
+                alert('Zoom time expired after 40 minutes!')
+            }, 39 * 60 * 1000)
+
+            client.on('connection-change', (payload) => {
+                console.log('zoom - connection-change:', payload);
+                if (payload.state === 'Closed') {
+                    clearTimeout(expiresTimeId)
+                    console.log("Meeting ended")
+                    // $('#meetingSDKElement').empty()
+                    // $('#meetingSDKChatElement').empty()
+                }
+            })
+            
+            console.log('join success', rs);
+            $("#meetingSDKElement>div>div>div:nth-child(2)>div:nth-child(5)>button")[0]?.click();
+            $("#menu-list-icon-more li:contains('Chat')")[0]?.click()
+
+            $(".zoom-chat-btn").show()
+    
+            $("#zoomCameraContainer").slideDown()
+            $("#zoomChatContainer").slideDown()
+    
+            console.log("Epanding tab...");
+    
+            // Hide loadding 
+            $("#loading-modal")[0].classList.add("hidden");
+            $('#zoom-camera-expand').css({ 'display': 'block' })
+            $('.zmwebsdk-makeStyles-root-236').css({ 'height': '135px' })
         } catch (error) {
             console.log(error);
             $("#loading-modal")[0].classList.add("hidden");
             return alert('Error occur');
         }
-        console.log('join success', rs);
-        $("#meetingSDKElement>div>div>div:nth-child(2)>div:nth-child(5)>button")[0]?.click();
-        $("#menu-list-icon-more li:contains('Chat')")[0]?.click()
-
-        $("#userListContainer").slideDown()
-        $("#zoomCameraContainer").slideDown()
-        $("#zoomChatContainer").slideDown()
-
-        $('#meetingSDKChatElement').prepend($('.zmwebsdk-makeStyles-chatCustomize-3')[0])
-
-        console.log("Epanding tab...");
-
-        // Hide loadding 
-        $("#loading-modal")[0].classList.add("hidden");
-        $('#zoom-camera-expand').css({ 'display': 'block' })
-        $('.zmwebsdk-makeStyles-root-236').css({ 'height': '135px' })
     }
     var isFrom888Tutor = false;
     var meetingId888 = "";
@@ -1714,7 +1767,7 @@ var backgroundColorCanvas = "";
                             getListUserOnline888();
                         }
                     });
-                    socket.emit('fetch-data-request', 'public', function () {
+                    socket.emit('fetch-data-request', function () {
                     });
                     socket.on('fetch-data-to-client', (data) => {
                         console.log(data);
@@ -1844,6 +1897,7 @@ var backgroundColorCanvas = "";
             li.classList.add('icon-layer', 'icon-selector');
             $(li).attr('data-cnt', index + 1);
             $(li).attr('data-id', layer.id);
+            console.log(`  ~ layer.id1`, layer.id)
             li.innerHTML = `<img src="assets/images/notepad/layer/layer-${index + 1}.png">`;
 
             $('#layers-body').append(li);
@@ -1853,6 +1907,7 @@ var backgroundColorCanvas = "";
 
         canvas.clear();
         loadLayerCanvasJsonNew(pool_data, canvas)
+        console.log(`  ~ loadLayerCanvasJsonNew`, 1)
 
         updateToolBarStatus()
     }
@@ -1999,6 +2054,7 @@ var backgroundColorCanvas = "";
     }
 
     function updateToolBarStatus() {
+        console.log(`  ~ updateToolBarStatus`, )
         // set layer icon
         $(`.icon-selector`).removeClass('active')
         $(`.icon-selector`)[currentLayer - 1]?.classList.add('active')
@@ -2168,6 +2224,7 @@ var backgroundColorCanvas = "";
         activeObject.item(1).set({
             fontSize: font_size
         })
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
 
         document.getElementById('current-size-mic').innerHTML = font_size + ` <span class="caret">`;
         canvas.requestRenderAll();
@@ -2178,6 +2235,7 @@ var backgroundColorCanvas = "";
         activeObject.item(1).set({
             fontSize: font_size
         })
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
 
         document.getElementById('current-size-camera').innerHTML = font_size + ` <span class="caret">`;
         canvas.requestRenderAll();
@@ -2188,6 +2246,7 @@ var backgroundColorCanvas = "";
         activeObject.item(1).set({
             fontSize: font_size
         })
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
 
         document.getElementById('current-size-file').innerHTML = font_size + ` <span class="caret">`;
         canvas.requestRenderAll();
@@ -2201,6 +2260,7 @@ var backgroundColorCanvas = "";
         } else {
             this.innerText = 'OFF';
         }
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
     })
 
     $('#objBlink-camera').on('click', function () {
@@ -2211,6 +2271,7 @@ var backgroundColorCanvas = "";
         } else {
             this.innerText = 'OFF';
         }
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
     })
 
     $('#objBlink-file').on('click', function () {
@@ -2221,6 +2282,7 @@ var backgroundColorCanvas = "";
         } else {
             this.innerText = 'OFF';
         }
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
     })
 
     $("#textColor-mic").on("input", function () {
@@ -2229,6 +2291,7 @@ var backgroundColorCanvas = "";
         });
         activeObject.colorText = this.value;
         canvas.requestRenderAll();
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
     });
 
     $("#textColor-camera").on("input", function () {
@@ -2237,6 +2300,7 @@ var backgroundColorCanvas = "";
         });
         activeObject.colorText = this.value;
         canvas.requestRenderAll();
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
     });
 
     $("#textColor-file").on("input", function () {
@@ -2245,6 +2309,7 @@ var backgroundColorCanvas = "";
         });
         activeObject.colorText = this.value;
         canvas.requestRenderAll();
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
     });
 
     $("#borderColor-mic").on("input", function () {
@@ -2259,6 +2324,7 @@ var backgroundColorCanvas = "";
         });
         activeObject.colorBorder = this.value;
         canvas.requestRenderAll();
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
     });
 
     $("#borderColor-camera").on("input", function () {
@@ -2272,6 +2338,7 @@ var backgroundColorCanvas = "";
         });
         activeObject.colorBorder = this.value;
         canvas.requestRenderAll();
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
     });
 
     $("#borderColor-file").on("input", function () {
@@ -2285,6 +2352,7 @@ var backgroundColorCanvas = "";
         });
         activeObject.colorBorder = this.value;
         canvas.requestRenderAll();
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
     });
 
     // popup path-menu
@@ -2655,7 +2723,6 @@ var backgroundColorCanvas = "";
             $(this).attr('data-layer', cnt - 3);
         });
 
-        let showSidebar = false;
         $('#btn-send').on('click', function () {
             showSidebar = !showSidebar;
             if (showSidebar) {
@@ -2668,6 +2735,7 @@ var backgroundColorCanvas = "";
         })
 
         function loadData(data) {
+            console.log(`  ~ loadData`, )
             layerNum = data.layerNum
             layerStorage = data.layerStorage
             pool_data = data.pool_data
@@ -2679,6 +2747,7 @@ var backgroundColorCanvas = "";
                 li.classList.add('icon-layer', 'icon-selector');
                 $(li).attr('data-cnt', index + 1);
                 $(li).attr('data-id', layer.id);
+                console.log(`  ~ layer.id2`, layer.id)
                 li.innerHTML = `<img src="assets/images/notepad/layer/layer-${index + 1}.png">`;
 
                 $('#layers-body').append(li);
@@ -2688,6 +2757,7 @@ var backgroundColorCanvas = "";
 
             canvas.clear();
             loadLayerCanvasJsonNew(pool_data, canvas)
+            console.log(`  ~ loadLayerCanvasJsonNew`, 2)
 
             updateToolBarStatus()
         }
@@ -2775,6 +2845,7 @@ var backgroundColorCanvas = "";
             if (dataQuestions.more) {
                 pool_data = dataQuestions.more
                 loadLayerCanvasJsonNew(pool_data, canvas);
+                console.log(`  ~ loadLayerCanvasJsonNew`, 3)
                 socket.emit('update', pool_data)
             }
             if (dataQuestions.question) {
@@ -3095,10 +3166,12 @@ var backgroundColorCanvas = "";
                 loadWorkSheetData(1, 200, '');
             }
         });
+        let listRoom=[]
 
-        $('#btn_login').on('click', function () {
+//vuong
+        $('#btn_login').on('click', function () { 
             if ($('#username')[0].value != '' && $('#pass')[0].value != '') {
-                $('#modal-wrapper').css({ 'display': 'none' });
+                // $('#modal-wrapper').css({ 'display': 'none' });
 
                 const today = new Date();
                 const user = {
@@ -3122,8 +3195,8 @@ var backgroundColorCanvas = "";
                     headers: myHeaders,
                     body: urlencoded,
                     redirect: 'follow'
-                };
-
+                }; 
+                //vuong
                 fetch("https://dieuhanh.vatco.vn/MobileLogin/LoginNoCheckOnlineNodeJs", requestOptions)
                     .then(response => response.json())
                     .then(async (result) => {
@@ -3141,18 +3214,35 @@ var backgroundColorCanvas = "";
                                     getListUserOnline();
                                 }
                             });
-                            socket.emit('fetch-data-request', 'public', function () {
-                            });
-                            socket.on('fetch-data-to-client', (data) => {
-                                console.log(data);
-                                loadData({
-                                    layerNum: data.layer,
-                                    layerStorage: data.layerStorage,
-                                    pool_data: data.drawData
-                                })
-                            });
+
+                            // socket.emit('fetch-data-request', 'public', function () {
+                            // });
+                            // socket.on('fetch-data-to-client', (data) => {
+                            //     console.log(data);
+                            //     loadData({
+                            //         layerNum: data.layer,
+                            //         layerStorage: data.layerStorage,
+                            //         pool_data: data.drawData
+                            //     })
+                            // });
+
                             getListUserOnline();
-                            $("#login").addClass("hidden");
+
+                            socket.emit('listRoom',  () => { })
+                            socket.on('listRoom', data => {
+                              //   console.log('listRoom', data);
+                                listRoom=data
+                                console.log(`  ~ data.length`, data.length)
+                                if(!data.length){
+                                    document.getElementById('btn_join_room').setAttribute('disabled',true)
+                                }else{
+                                    document.getElementById("room").innerHTML = data.reverse().map(item => `<option value="${item.roomName}" user-create="${item.userCreate}">${item.roomName}</option>`).join('')
+                                }
+                            })
+
+                            // $("#login").addClass("hidden"); 
+                            $("#login-modal").addClass("hidden");
+                            $("#create_room").removeClass("hidden");
                             $("#logout").removeClass("hidden");
                             $("#nameuser").text(username);
 
@@ -3176,11 +3266,99 @@ var backgroundColorCanvas = "";
                 alert('Username and password cannot be blank!');
             }
         })
+        const roomId=randomID()
+        $("#btn_create_room").on("click", function () {
+            const userCreate = $("#username")[0].value;
+            const newRoom = { roomName: `room${roomId}`, userCreate };
+            listRoom.push(newRoom);
+            // console.log("🚀 ~ newRoom", newRoom)
+            document.getElementById("room").innerHTML = `<option selected value="room${roomId}">room${roomId}</option>`;
+            socket.emit("createRoom", newRoom);
+            socket.emit('joinRoom',{ room:`room${roomId}`, userID:userCreate })
+            $("#create_room").addClass("hidden"); 
+            $("#login").addClass("hidden"); 
+         }); 
 
-        $('#sub-menu li').on('click', function (e) {
+         $("#btn_join_room").on("click", function () {
+             const userID = $("#username")[0].value;
+             const room = document.getElementById("room").value;
+             const {userCreate} = listRoom.find((item) => item.roomName === room);
+            //  console.log("🚀 ~ userCreate", userCreate)
+             
+             
+             if (userCreate != userID) { 
+                 console.log('btn_join_room');
+                // document.getElementById("block-toolbar").classList.add("hidden");
+                socket.emit("validateLoginRoom", { room, userID });
+             }
+    
+             // //login
+             // socket.emit("fetch-data-request", room);
+             // // console.log(`  ~ socket id`, socket.id,socket.objectID)
+    
+             // socket.on("fetch-data-to-client", (data) => {
+             //    // console.log("fetch-data-to-client", data);
+             //    loadData({
+             //       layerNum: data.layer,
+             //       layerStorage: data.layerStorage,
+             //       pool_data: data.drawData,
+             //    });
+             // });
+          });
 
+         socket.on("loginRoom", ({ room, userID ,socketIDUser}) => { 
+            // console.log(`  loginRoom`, { room, userID })
+            document.getElementById('login_room').classList.remove('hidden')
+            document.getElementById('login_room').innerHTML=''
+            //   document.getElementById('login_room').innerHTML=`<p>${userID} join ${room}</p>
+            //   <div class="">
+            //     <button class="rounded"  id="btn_yes" style="padding: 10px;">Yes</button>
+            //     <button class="rounded" id="btn_no" style="padding: 10px;">No</button>
+            //   </div>`
+              document.getElementById('login_room').innerHTML=`<div id="" class="modal" style="display: flex;justify-content: center;height: 120px;" >
+              <div id="" sclass="modal-content animate" style="padding-top: 20px;">
+                <p style="color: #fff;margin-bottom: 10px;font-size: large;">${userID} join ${room}</p>
+                <div class="">
+                  <button class="rounded"  id="btn_yes" style="padding: 10px 30px;margin-left: 30px;">Yes</button>
+                  <button class="rounded" id="btn_no" style="padding: 10px  30px;">No</button>
+                </div>
+              </div>
+            </div>`
+   
+              const handleLoginRoom=(value) => { 
+                  console.log(`  ~ value handleLoginRoom`, value) 
+                  socket.emit('resultJoinRoom',{...value,socketIDUser,room,userID})
+                  document.getElementById('login_room').classList.add('hidden')
+              }
+  
+              $("#btn_yes").on("click",()=> handleLoginRoom({joinRoom:true})) 
+              $("#btn_no").on("click",()=> handleLoginRoom({joinRoom:false}))
+        }) 
 
+        socket.on('resultJoinRoom',(data) => {  
+            const {room,joinRoom,userID}=data
+           console.log(`  ~ data resultJoinRoom`,room, data) 
+           if(joinRoom) {  
 
+            // document.getElementById('create_room').classList.add('hidden')  
+            socket.emit('joinRoom',{ room, userID }) 
+            // socket.emit("fetch-data-request", room); 
+
+            socket.emit('fetch-data-request', room);
+            socket.on('fetch-data-to-client', (data) => {
+                console.log('fetch-data-to-client', data);
+                loadData({
+                    layerNum: data.layer,
+                    layerStorage: data.layerStorage,
+                    pool_data: data.drawData
+                })
+            });
+            // console.log(`  ~ socket id`, socket.id,socket.objectID)
+            $("#login").addClass("hidden"); 
+            }
+         })
+
+        $('#sub-menu li').on('click', function (e) { 
             e.stopPropagation()
         })
 
@@ -3199,7 +3377,7 @@ var backgroundColorCanvas = "";
             fetch(`https://dieuhanh.vatco.vn/MobileLogin/LogOutNodeJs?userName=${$('#username')[0].value}`, requestOptions)
                 .then(response => response.json())
                 .then(result => {
-                    console.log(result);
+                  //   console.log(result);
                     socket.emit('joinRoom', { name: $('#username')[0].value, time: '' });
                     window.location.href = window.location.href;
                 })
@@ -3217,7 +3395,7 @@ var backgroundColorCanvas = "";
             fetch("https://dieuhanh.vatco.vn/MobileLogin/GetListUserOnlineNotepad", requestOptions)
                 .then(response => response.json())
                 .then(result => {
-                    console.log(result);
+                  //   console.log(result);
                     if (result.Error == false) {
                         const users = result.Object;
                         $('#listUsers')[0].innerHTML = '';
@@ -4031,7 +4209,7 @@ var backgroundColorCanvas = "";
             //             // if(e.button === 2) {
             //             //     console.log("middle click");
             //             // }
-            //             if (e.button === 3) {
+            //              if (e.button === 3) { 
             //                 handleTextboxRightclick(this);
             //             }
             //         });
@@ -4435,7 +4613,7 @@ var backgroundColorCanvas = "";
             var cnt = getCanvas();
             var url = new URL($url);
             var c = url.searchParams.get("v");
-            console.log(url);
+            console.log($url);
 
             // var $div = $('<div/>', {
             //     class: 'item-video',
@@ -4461,7 +4639,9 @@ var backgroundColorCanvas = "";
             var $div = $('.item-video')
             var iframe = $('#ytbIframe')
 
+            // iframe.attr('crossorigin', 'anonymous')
             iframe.attr('src', `https://www.youtube.com/embed/${c}`)
+            $div.attr('draggable', true)
             $div.removeClass('hidden')
 
             console.log($div);
@@ -4519,6 +4699,7 @@ var backgroundColorCanvas = "";
             li.classList.add('icon-layer', 'icon-selector');
             $(li).attr('data-cnt', len + 1);
             $(li).attr('data-id', layer.id);
+            console.log(`  ~ layer.id3`, layer.id)
             li.innerHTML = `<img src="assets/images/notepad/layer/layer-${len + 1}.png">`;
             $('#layers-body').append(li);
 
@@ -4538,6 +4719,7 @@ var backgroundColorCanvas = "";
                 li.classList.add('icon-layer', 'icon-selector');
                 $(li).attr('data-cnt', index + 1);
                 $(li).attr('data-id', layer.id);
+                console.log(`  ~ layer.id4`, layer.id)
                 li.innerHTML = `<img src="assets/images/notepad/layer/layer-${index + 1}.png">`;
 
                 $('#layers-body').append(li);
@@ -4549,6 +4731,7 @@ var backgroundColorCanvas = "";
                 canvas.id = $(`.icon-selector[data-cnt="${currentLayer}"]`).data('id')
                 canvas.clear();
                 loadLayerCanvasJsonNew(pool_data, canvas);
+                console.log(`  ~ loadLayerCanvasJsonNew`, 4)
             }
             updateToolBarStatus()
         })
@@ -4605,6 +4788,7 @@ var backgroundColorCanvas = "";
             pool_data = data
             canvas.clear()
             loadLayerCanvasJsonNew(pool_data, canvas);
+            console.log(`  ~ loadLayerCanvasJsonNew`, 5)
         })
 
         socket.on('updated', function (data) {
@@ -4619,7 +4803,7 @@ var backgroundColorCanvas = "";
                         })
                         if (item.blink) blink(item)
                         if (item.name === 'media') {
-                            // console.log('media updated', item);
+                            console.log('media updated', item);
                             if (item.nameDevice !== 'attach-file') {
                                 if (item.src.length > 0) {
                                     var srcItem = item.src[item.src.length - 1]
@@ -4663,6 +4847,23 @@ var backgroundColorCanvas = "";
             })
             deleteObjInPool(data.objectID, pool_data, data.layer, canvas);
             resetObjList();
+        })
+
+        socket.on('setBgImg', function (id) {
+            if (id) {
+                canvas.forEachObject(o => {
+                    if (o.objectID === id) {
+                        canvas.setBackgroundImage(o, canvas.renderAll.bind(canvas), {
+                            top: 0,
+                            left: 0,
+                            scaleX: canvas.width / o.width,
+                            scaleY: canvas.height / o.height
+                        });
+                    }
+                })
+            } else {
+                canvas.setBackgroundImage(null, canvas.renderAll.bind(canvas));
+            }
         })
 
         $('#icon-save').on('click', function () {
@@ -4796,7 +4997,7 @@ var backgroundColorCanvas = "";
             }
             $('#icon-load-canvas').val('');
         });
-
+//vuong
         $('#icon-load').on('click', function () {
             let layer_num = $('#layers-body .active').attr('data-cnt');
             document.getElementById("file-layer").onchange = (e) => {
@@ -4809,7 +5010,10 @@ var backgroundColorCanvas = "";
                             layerSave[i].layer = layer_num;
                             layerSave[i].objectID = randomID();
                             pool_data.push(layerSave[i]);
-                            socket.emit('drawing', layerSave[i]);
+                            // socket.emit('drawing',document.getElementById("room").value, layerSave[i]);
+                            console.log("🚀 ~ document.getElementById(room).value", document.getElementById("room").value)
+                            socket.join($('#room')[0].value);
+                            socket.emit('drawing',layerSave[i]);
                         }
                         loadCanvasJson(pool_data, canvas);
                     })
@@ -4976,7 +5180,7 @@ var backgroundColorCanvas = "";
 
     function initDraw() {
         $(document).on('click', '.icon-selector', function () {
-            // console.log(canvas.backgroundColor);
+            console.log('canvas backgound',canvas.backgroundColor);
 
             $('#panel').find('.typing-input').remove();
             $('#add-type-box').removeClass('active');
@@ -5011,11 +5215,16 @@ var backgroundColorCanvas = "";
 
                 currentLayer = $(this).data('cnt')
                 canvas.id = $(this).data('id');
+                console.log(`  ~ currentLayer`, currentLayer)
+                console.log(`  ~ canvas.id `, canvas.id )
 
                 // load target layer
                 // const canvasObj = JSON.parse(layer.canvas);
                 // loadCanvasJsonNew(canvasObj);
                 loadLayerCanvasJsonNew(pool_data, canvas)
+
+                console.log(`  ~ loadLayerCanvasJsonNew`, 6,{pool_data, canvas,currentLayer})// vuong
+
                 canvas.setBackgroundColor(layerStorage[currentLayer - 1].canvas.backgroundColor, canvas.renderAll.bind(canvas));
                 // set active to background color icon
                 $("#grids-body .btn-color-grid").removeClass('active');
@@ -5025,7 +5234,7 @@ var backgroundColorCanvas = "";
                 if (layerStorage[currentLayer - 1].canvas.gridObj !== null) {
                     $(`#grids-body .btn-grid[data-grid='${layerStorage[currentLayer - 1].canvas.gridObj}']`).addClass('active');
                 }
-                console.log('change layer', layerStorage);
+                console.log('change layer', layerStorage);//vuong
             }
         });
 
@@ -5094,6 +5303,7 @@ var backgroundColorCanvas = "";
             socket.emit('update', pool_data);
             canvas.clear();
             loadLayerCanvasJsonNew(pool_data, canvas)
+            console.log(`  ~ loadLayerCanvasJsonNew`, 7)
             $('#change-eraser')[0].click()
         });
 
@@ -5125,7 +5335,7 @@ var backgroundColorCanvas = "";
                 }
 
                 canvas.setBackgroundColor(`${bg}`, canvas.renderAll.bind(canvas));
-                // console.log(canvas);
+                console.log('canvas',canvas);
                 const data = {
                     backgroundColor: bg,
                     id: canvas.id
@@ -5556,6 +5766,7 @@ var backgroundColorCanvas = "";
             li.classList.add('icon-layer', 'icon-selector', 'active');
             $(li).attr('data-cnt', len + 1);
             $(li).attr('data-id', layer.id);
+            console.log(`  ~ layer.id7`, layer.id)
             li.innerHTML = `<img src="assets/images/notepad/layer/layer-${len + 1}.png">`;
 
             $('#layers-body').append(li);
@@ -5584,6 +5795,7 @@ var backgroundColorCanvas = "";
                 li.classList.add('icon-layer', 'icon-selector');
                 $(li).attr('data-cnt', index + 1);
                 $(li).attr('data-id', layer.id);
+                console.log(`  ~ layer.id8`, layer.id)
                 li.innerHTML = `<img src="assets/images/notepad/layer/layer-${index + 1}.png">`;
 
                 $('#layers-body').append(li);
@@ -5598,6 +5810,7 @@ var backgroundColorCanvas = "";
             updateToolBarStatus()
 
             loadLayerCanvasJsonNew(pool_data, canvas);
+            console.log(`  ~ loadLayerCanvasJsonNew`, 8)
 
         }
     });
@@ -6595,6 +6808,8 @@ var backgroundColorCanvas = "";
 
             blink: false,
             lineStyle: 'solid',
+            lockMovementX: false,
+            lockMovementY: false,
 
             select: false,
             status: false,
@@ -6663,7 +6878,7 @@ var backgroundColorCanvas = "";
             matchObjEventHandler(obj);
         }
         else {
-            console.log(obj);
+            console.log('obj',obj);
             obj.on('mouseup', function (e) {
                 if (e.button === 3)
                     showPopUpMenu(obj)
@@ -6845,7 +7060,7 @@ var backgroundColorCanvas = "";
     // handle select obj type
     function selectObjEventHandler(obj) {
         obj.on('mousedown', function () {
-            // console.log('mousedown');
+            console.log('mousedown');
             if (isCreateQuiz && (isMakingAnswer || isDoQuiz)) {
                 this.select = !this.select;
                 if (this.select) {
@@ -6940,6 +7155,7 @@ var backgroundColorCanvas = "";
         //     }
         // });
         item.on('mouseup', function () {
+            console.log('mouseup')
             // console.log(item);
             if (isCreateQuiz && (isMakingAnswer || isDoQuiz)) {
                 var object = this;
@@ -7209,7 +7425,7 @@ var backgroundColorCanvas = "";
 
             }
 
-            // console.log('obj moving',);
+            console.log('obj moving',);
 
             if ($('#edit-form')[0].style.visibility === 'visible') {
                 hidePopupMenu();
@@ -8615,6 +8831,8 @@ var backgroundColorCanvas = "";
                 if (worksheetType && isWorkSheetMore) data.isWorkSheet = true
                 pool_data.push(data);
                 addNewObject(lastObject);
+                // socket.emit('joinRoom',{room:$("#room")[0].value,userID:$("#username")[0].value})
+                // socket.emit('drawing', data);
                 socket.emit('drawing', data);
                 canvas.item(json.length - 1).set({
                     objectID: lastObject.objectID,
@@ -8624,12 +8842,13 @@ var backgroundColorCanvas = "";
             canvas.requestRenderAll();
         }
     }
-
+//vuong
     socket.on('drawing', function (obj) {
         console.log('on drawing', obj);
         if (obj.data) {
             pool_data.push(obj);
             loadLayerCanvasJsonNew([obj], canvas)
+            console.log(`  ~ loadLayerCanvasJsonNew`, 9)
             // isLoadedFromJson = true;
             // var jsonObj = obj.data;
             // fabric.util.enlivenObjects([jsonObj], function (enlivenedObjects) {
@@ -8951,7 +9170,9 @@ var backgroundColorCanvas = "";
     })
 
     $("#font-textbox li").click(function () {
-        loadAndUseTextbox($(this).attr('value'), activeObject.objectID, canvas);
+        loadAndUse($(this).attr('value'), activeObject, canvas);
+        $("#font-textbox li").removeClass('active')
+        $(this).addClass('active')
     })
 
     $("#size li").click(function () {
@@ -9080,6 +9301,7 @@ var backgroundColorCanvas = "";
         activeObject.set({
             fill: this.value
         });
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
 
         canvas.requestRenderAll();
     });
@@ -9329,6 +9551,7 @@ var backgroundColorCanvas = "";
                 hasControls: true
             });
         }
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
         canvas.requestRenderAll();
     });
 
@@ -9346,6 +9569,7 @@ var backgroundColorCanvas = "";
             })
             this.innerText = 'On';
         }
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
         canvas.requestRenderAll();
     })
 
@@ -9356,14 +9580,31 @@ var backgroundColorCanvas = "";
             })
             canvas.bringToFront(activeObject);
             this.innerText = 'Back';
+
+            const fromIndex = pool_data.findIndex(o => o.id === activeObject.objectID)
+            const obj = pool_data.splice(fromIndex, 1)[0]
+            pool_data.push(obj)
         } else {
             activeObject.set({
                 pos: 'back'
             })
-            if (layerStorage[currentLayer - 1].canvas.gridObj) activeObject.moveTo(1)
-            else canvas.sendToBack(activeObject);
+            if (layerStorage[currentLayer - 1].canvas.gridObj) {
+                activeObject.moveTo(1)
+
+                const fromIndex = pool_data.findIndex(o => o.id === activeObject.objectID)
+                const obj = pool_data.splice(fromIndex, 1)[0]
+                pool_data.splice(1, 0, obj);
+            }
+            else {
+                canvas.sendToBack(activeObject);
+                
+                const fromIndex = pool_data.findIndex(o => o.id === activeObject.objectID)
+                const obj = pool_data.splice(fromIndex, 1)[0]
+                pool_data.unshift(obj)
+            }
             this.innerText = 'Front';
         }
+        socket.emit('update', pool_data)
         canvas.requestRenderAll();
     })
 
@@ -9410,6 +9651,8 @@ var backgroundColorCanvas = "";
             this.innerText = 'Off';
 
             canvas.setBackgroundImage(null, canvas.renderAll.bind(canvas));
+
+            socket.emit('setBgImg', null)
         } else {
             activeObject.set({
                 isBackground: true,
@@ -9427,7 +9670,9 @@ var backgroundColorCanvas = "";
                 scaleX: canvas.width / activeObject.width,
                 scaleY: canvas.height / activeObject.height
             });
+            socket.emit('setBgImg', activeObject.objectID)
         }
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket)
         canvas.requestRenderAll();
     })
 
@@ -9679,6 +9924,7 @@ var backgroundColorCanvas = "";
             soundMoving: sound.src
         });
         this.value = '';
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
     });
 
     $('#pathMovingMode').on('click', function () {
@@ -9742,10 +9988,12 @@ var backgroundColorCanvas = "";
 
     $("#colorSelected").on("input", function () {
         activeObject.colorSelected = this.value;
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
     });
 
     $("#colorUnselected").on("input", function () {
         activeObject.colorUnselected = this.value;
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
     });
 
     $('#close-editor').on('click', function () {
@@ -9772,6 +10020,7 @@ var backgroundColorCanvas = "";
             canvas.requestRenderAll();
         });
         this.value = '';
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
     });
 
     $('#soundSelected').on('input', function (e) {
@@ -9782,6 +10031,7 @@ var backgroundColorCanvas = "";
             soundSelected: sound.src
         });
         this.value = '';
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
     });
 
     $('#soundUnselected').on('input', function (e) {
@@ -9792,6 +10042,7 @@ var backgroundColorCanvas = "";
             soundUnselected: sound.src
         });
         this.value = '';
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
     });
 
     $('#soundTyping').on('input', function (e) {
@@ -9802,6 +10053,7 @@ var backgroundColorCanvas = "";
             soundTyping: sound.src
         });
         this.value = '';
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
     });
 
     $('#soundSnap').on('input', function (e) {
@@ -9812,12 +10064,14 @@ var backgroundColorCanvas = "";
             soundSnap: sound.src
         });
         this.value = '';
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
     });
 
     $("#objAngle").on("input", function () {
         activeObject.angle = this.value;
         console.log(activeObject);
         canvas.renderAll();
+        updateLocal(pool_data, activeObject.objectID, activeObject.toObject(customAttributes), socket, false)
     });
 
     canvas.on('mouse:up', function (e) {
@@ -11207,7 +11461,7 @@ var backgroundColorCanvas = "";
                         if (data.canvas && data.startingCanvas && data.questions && data.correctAnswers) {
                             fabric.util.enlivenObjects(canvasObj.objects, function (enlivenedObjects) {
                                 enlivenedObjects.forEach(function (obj) {
-                                    console.log(obj);
+                                    console.log('obj',obj);
                                     var quizType = $('#quiz-type').val();
                                     if (obj.isDrag === true || obj.isDrop === true) {
                                         countItem++;
@@ -12383,6 +12637,45 @@ var backgroundColorCanvas = "";
 
     // it's need to run 
     $('#zmmtg-root, .meeting-app, .meeting-client').addClass('nonew');
+    
+
+function loadAndUse(font, object, canvas) {
+    if (font == "Time New Roman") {
+        object.set({
+            fontFamily: font
+        })
+        object._objects?.forEach(o => {
+            if (o.type === 'textbox') {
+                o.set('fontFamily', font)
+            }
+        })
+        updateLocal(pool_data, object.objectID, object.toObject(customAttributes), socket)
+        canvas.requestRenderAll();
+    } else {
+        WebFont.load({
+            google: {
+                families: [font]
+            },
+
+            loading: function () {
+
+            },
+
+            active: function () {
+                object.set({
+                    fontFamily: font
+                })
+                object._objects?.forEach(o => {
+                    if (o.type === 'textbox') {
+                        o.set('fontFamily', font)
+                    }
+                })
+                updateLocal(pool_data, object.objectID, object.toObject(customAttributes), socket)
+                canvas.requestRenderAll();
+            }
+        });
+    }
+}
 
 })(jQuery, window, document);
 
@@ -12563,44 +12856,6 @@ function loadAndUseTextbox(font, objectID, canvas) {
                         return;
                     }
                 })
-            }
-        });
-    }
-}
-
-function loadAndUse(font, object, canvas) {
-    if (font == "Time New Roman") {
-        object.set({
-            fontFamily: font
-        })
-        object._objects?.forEach(o => {
-            if (o.type === 'textbox') {
-                o.set('fontFamily', font)
-            }
-        })
-        updateLocal(pool_data, object.objectID, object.toObject(customAttributes), socket)
-        canvas.requestRenderAll();
-    } else {
-        WebFont.load({
-            google: {
-                families: [font]
-            },
-
-            loading: function () {
-
-            },
-
-            active: function () {
-                object.set({
-                    fontFamily: font
-                })
-                object._objects?.forEach(o => {
-                    if (o.type === 'textbox') {
-                        o.set('fontFamily', font)
-                    }
-                })
-                updateLocal(pool_data, Object.objectID, Object.toObject(customAttributes), socket)
-                canvas.requestRenderAll();
             }
         });
     }

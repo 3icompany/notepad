@@ -509,6 +509,7 @@ f .actions-r .r-mode .mode-on {}
 #menu-main {
     background: #323130;
     position: relative;
+    height: 40px;
     z-index: 1;
 }
 
@@ -1663,7 +1664,6 @@ body.none-active .menu-tray {
 .wrap-sidebar-left {
     position: absolute;
     right: 0;
-    top: 0;
     bottom: 0;
     height: calc(100vh - 80px);
     /* 80px is the heaader bar height. */
@@ -2735,37 +2735,7 @@ textarea {
 }
 
 /* Tablet width >= 740px and width < 1024px  */
-@media only screen and (min-width: 46.25em) and (max-width: 89.063em) {
-    .modal-content,
-    #create_room {
-        top: 15%;
-        width: 50%;
-    }
-
-    .style-popup-color,
-    .style-popup-pencil,
-    .style-popup-eraser,
-    .style-popup-grid {
-        top: 120px;
-    }
-
-    .wrap-sidebar-left {
-        height: calc(100vh - 120px);
-        width: 40%;
-    }
-
-    /* .button-send {
-        bottom: 40px;
-    } */
-
-    .bottom-menu {
-        right: 54%;
-    }
-
-    div#zoom-list {
-        left: 10% !important;
-    }
-}
+@media only screen and (min-width: 46.25em) and (max-width: 63.9375em) {}
 
 @media screen and (max-width: 600px) {
     .diaout-layer .top {
@@ -6258,30 +6228,12 @@ ul {
     padding: 0;
 }
 
-.zoom-chat-btn {
-    display: none;
-    z-index: 10;
-    position: absolute;
-    bottom: 22px;
-    right: 5px;
-    color: #fff;
-    padding: 10px;
-    background: rgba(255,255,255, 0.3);
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all linear 0.2s;
-}
-.zoom-chat-btn:hover {
-    background: rgba(255,255,255, 0.4);
-}
-
 div#zoom-list {
-    top: 12%;
+    top: 169px;
     left: 50%;
     right: auto;
-    width: 300px;
-    height: fit-content;
-    /* bottom: 100px; */
+    width: 500px;
+    bottom: 100px;
     border: 2px solid #ccc;
     border-radius: 10px;
 }
@@ -6292,7 +6244,7 @@ div#zoom-close {
 
 #zoom-list .w-list-listworksheet {
     max-height: calc(100vh - 360px);
-    /* height: 400px; */
+    height: 400px;
 }
 
 .list-object {
