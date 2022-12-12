@@ -265,10 +265,11 @@ img {
 }
 
 #menu-top {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
     background: #232222;
-    height: 40px;
     position: relative;
-    z-index: 1;
 }
 
 #menu-top>.row {
@@ -1665,7 +1666,7 @@ body.none-active .menu-tray {
     right: 0;
     top: 0;
     bottom: 0;
-    height: calc(100vh - 80px);
+    height: 100%;
     /* 80px is the heaader bar height. */
     /* float: right; */
     z-index: 0;
@@ -1821,7 +1822,7 @@ body.none-active .menu-tray {
 
 #wrapper {
     overflow: auto;
-    height: 100vh;
+    height: 100%;
 }
 
 .message-list ul {
@@ -2638,6 +2639,28 @@ textarea {
     z-index: 5;
 }
 
+#join-room-animation {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin-top: 24px;
+}
+
+.loader {
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+0% { transform: rotate(0deg); }
+100% { transform: rotate(360deg); }
+}
+
 
 /* Responsive */
 /* mobile with < 740px */
@@ -2742,6 +2765,7 @@ textarea {
         width: 50%;
     }
 
+    .style-popup-layer,
     .style-popup-color,
     .style-popup-pencil,
     .style-popup-eraser,
@@ -2749,8 +2773,11 @@ textarea {
         top: 120px;
     }
 
+    .style-popup-symbol {
+        margin-left: 0;
+    }
+
     .wrap-sidebar-left {
-        height: calc(100vh - 120px);
         width: 40%;
     }
 
@@ -2765,6 +2792,8 @@ textarea {
     div#zoom-list {
         left: 10% !important;
     }
+
+
 }
 
 @media screen and (max-width: 600px) {
@@ -6259,7 +6288,7 @@ ul {
 }
 
 .zoom-chat-btn {
-    display: none;
+    /* display: none; */
     z-index: 10;
     position: absolute;
     bottom: 22px;

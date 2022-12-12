@@ -1,10 +1,10 @@
 var backgroundColorCanvas = "";
 (function ($, window, document, undefined) {
     'use strict';
-    var url = 'https://nodejs.3i.com.vn'; //Use when run on publish
+    // var url = 'https://nodejs.3i.com.vn'; //Use when run on publish
     // var nodeServer = 'http://127.0.0.1:3000'; //Use when run on local
     // var url = 'http://localhost:3001';
-    // var url = 'http://localhost:3000';
+    var url = 'http://localhost:3000';
     var plugin_url = 'https://notepad.s-work.vn/v3/';//
     var stanza = 999999;
     var lengthObject = 0;
@@ -1543,23 +1543,30 @@ var backgroundColorCanvas = "";
         $(`.attach-file-popup-class .list`)[0].appendChild(li);
     }
 
-    $(".zoom-chat-btn").click(function() {
-        // var e = $.Event("keypress");
-        // e.which = 13; //choose the one you want
-        // e.keyCode = 13;
-        // console.dir($("#meetingSDKChatElement textarea")[0]);
-        // $("#meetingSDKChatElement textarea").trigger(e);
-        var keyboardEvent = new KeyboardEvent('keydown', {
-            code: 'Enter',
-            key: 'Enter',
-            charKode: 13,
-            keyCode: 13,
-            view: window
-        });
+    // $(".zoom-chat-btn").click(function() {
+    //     // var e = $.Event("keypress");
+    //     // e.which = 13; //choose the one you want
+    //     // e.keyCode = 13;
+    //     // console.dir($("#meetingSDKChatElement textarea")[0]);
+    //     // $("#meetingSDKChatElement textarea").trigger(e);
+    //     // var keyboardEvent = new KeyboardEvent('keydown', {
+    //     //     code: 'Enter',
+    //     //     key: 'Enter',
+    //     //     charKode: 13,
+    //     //     keyCode: 13,
+    //     //     view: window
+    //     // });
+
+    //     // console.log('click', keyboardEvent);
     
-        // $("#meetingSDKChatElement textarea")[0].dispatchEvent(keyboardEvent);
-        $("#test-chat")[0].dispatchEvent(keyboardEvent);
-    })
+    //     // // $("#meetingSDKChatElement textarea")[0].dispatchEvent(keyboardEvent);
+    //     // $("#test-chat")[0].dispatchEvent(keyboardEvent);
+    //     // var text = $("#test-chat").val()
+    //     // $("#test-chat").val(text + 'a')
+    //     var text = $("#meetingSDKChatElement textarea").val()
+    //     $("#meetingSDKChatElement textarea").val(text + 'a')
+
+    // })
 
     var zoomConfig
     var isInitZoomClient = false
@@ -1651,7 +1658,7 @@ var backgroundColorCanvas = "";
             }, 1000);
         });
     }
-    let showSidebar = false;
+    let showSidebar = true;
     /**
      * Hanlde popup and display info from zoom sdk
      * @author PhamVanPhuc
@@ -1940,6 +1947,7 @@ var backgroundColorCanvas = "";
             }
         }
     });
+    
     // chat zoom click event handler
     $('body').click(function (event) {
         var closeBtn = $(event.target).closest('ul#menu-list-icon-more li:contains("Chat")');
@@ -1983,6 +1991,13 @@ var backgroundColorCanvas = "";
             $('div#meetingSDKChatElement > div > div > div > div:nth-child(2) > div:first-child').css({ 'height': '135px' })
 
             $(this).html('<i class="fa fa-arrows-alt" aria-hidden="true"></i>')
+
+            if ($('.zmwebsdk-makeStyles-chatCustomize-3').length === 0) {
+                setTimeout(() => {
+                    $("#meetingSDKElement>div>div>div:nth-child(2)>div:nth-child(5)>button")[0]?.click();
+                    $("#menu-list-icon-more li:contains('Chat')")[0]?.click()
+                }, 10);
+            }
         }
         else {
             $('#online-learning').css({ 'display': 'none' })
@@ -1999,6 +2014,13 @@ var backgroundColorCanvas = "";
             $('div#meetingSDKChatElement > div > div > div > div:nth-child(2) > div:first-child')[0]?.setAttribute('style', 'height: 65vh !important')
 
             $(this).html('<i class="fa fa-compress" aria-hidden="true"></i>')
+
+            if ($('.zmwebsdk-makeStyles-chatCustomize-3').length > 0) {
+                setTimeout(() => {
+                    $("#meetingSDKElement>div>div>div:nth-child(2)>div:nth-child(5)>button")[0]?.click();
+                    $("#menu-list-icon-more li:contains('Chat')")[0]?.click()
+                }, 10);
+            }
         }
     })
 
@@ -3267,17 +3289,28 @@ var backgroundColorCanvas = "";
             }
         })
         const roomId=randomID()
-        $("#btn_create_room").on("click", function () {
+        $("#room-create").on("click", function () {
             const userCreate = $("#username")[0].value;
-            const newRoom = { roomName: `room${roomId}`, userCreate };
+            const roomName = $("#room-name").val()
+            const newRoom = { roomName, userCreate };
             listRoom.push(newRoom);
             // console.log("🚀 ~ newRoom", newRoom)
-            document.getElementById("room").innerHTML = `<option selected value="room${roomId}">room${roomId}</option>`;
+            $("#room").append(`<option selected value="${roomName}">${roomName}</option>`)
             socket.emit("createRoom", newRoom);
-            socket.emit('joinRoom',{ room:`room${roomId}`, userID:userCreate })
+            socket.emit('joinRoom',{ room:roomName, userID:userCreate })
             $("#create_room").addClass("hidden"); 
             $("#login").addClass("hidden"); 
-         }); 
+         });
+
+         $("#room-create-cancel").on("click", function () {
+            $("#create_room").removeClass("hidden");
+            $("#create_room_modal").addClass('hidden');
+         });
+
+         $("#btn_create_room").on("click", function () {
+            $("#create_room").addClass("hidden");
+            $("#create_room_modal").removeClass('hidden');
+         });
 
          $("#btn_join_room").on("click", function () {
              const userID = $("#username")[0].value;
@@ -3290,6 +3323,9 @@ var backgroundColorCanvas = "";
                  console.log('btn_join_room');
                 // document.getElementById("block-toolbar").classList.add("hidden");
                 socket.emit("validateLoginRoom", { room, userID });
+
+                $("#join-room-animation").removeClass('hidden')
+                $("#room-btn-container").addClass('hidden')
              }
     
              // //login
@@ -6883,6 +6919,10 @@ var backgroundColorCanvas = "";
                 if (e.button === 3)
                     showPopUpMenu(obj)
             });
+
+            obj.on('touchstart', function (e) {
+                console.log('touch', e);
+            })
 
             obj.on('moving', function (options) {
                 if (this.snap) {
