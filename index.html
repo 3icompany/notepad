@@ -312,16 +312,16 @@
                     <img src="assets/images/login/1.png" alt="Avatar" class="avatar">
                     <h1 style="text-align:center">Login</h1>
                   </div>
-                  <div class="" style="padding-top: 25px;">
-                    <input style="margin-top: 8px;margin-right: 26px;margin-bottom: 8px;margin-left: 26px;width: 90%;" type="text" placeholder="Enter Username" name="username" class="rounded" id="username">
-                    <input style="margin-top: 8px;margin-right: 26px;margin-bottom: 8px;margin-left: 26px;width: 90%;" type="password" placeholder="Enter Password" name="pass" class="rounded" id="pass">
+                  <div class="" style="padding: 25px 16px 0;">
+                    <input style="width: 100%;" type="text" placeholder="Enter Username" name="username" class="rounded" id="username">
+                    <input style="width: 100%;" type="password" placeholder="Enter Password" name="pass" class="rounded" id="pass">
                   </div>
                   <div style="text-align: right;">
                     <button class="rounded" id="btn_login" type="submit">Login</button>
                   </div>
                 </div>
                 
-                <div id="create_room" class="modal-content animate hidden" style="top: 20%;">
+                <div id="create_room" class="modal-content animate hidden" style="top: 20%; height: fit-content;">
                   <div id="room-btn-container">
                     <p style="padding: 20px;font-size: medium;text-align: center;">Select room</p>
                     <div class="" style="margin: 0 30px;">
@@ -340,7 +340,7 @@
                   </div>
                 </div>
                 
-                <div id="create_room_modal" class="modal-content animate hidden" style="top: 20%;">
+                <div id="create_room_modal" class="modal-content animate hidden" style="top: 20%; height: fit-content;">
                   <p style="padding: 20px;font-size: medium;text-align: center;">Enter your room name</p>
                   <div style="padding: 12px 32px;">
                     <input name="room-name" placeholder="Your room name..." id="room-name" class="rounded" style="padding: 10px 16px; width: 100%;" ></input>
@@ -387,807 +387,812 @@
             <div class="no-padding border-r">
               <div class="row taskbar-notepad r-taskbar">
                 <div class="block-toolbar">
-                  <div class="block-ws">
+                  <div>
+                    <div class="block-ws">
 
 
-                    <div class="containerr" style="margin-bottom: 27px;margin-left: -8px; margin-right:40px">
+                      <div class="containerr" style="margin-bottom: 27px;margin-left: -8px; margin-right:40px">
 
-                      <div class="select-box" id="dropdown">
+                        <div class="select-box" id="dropdown">
 
-                        <div class="options-container">
+                          <div class="options-container">
 
-                          <div class="option" id="newhihi">
-                            <input type="radio" class="radio" id="Automobiles" name="category" value="n">
-                            <label for="Automobiles">New</label>
+                            <div class="option" id="newhihi">
+                              <input type="radio" class="radio" id="Automobiles" name="category" value="n">
+                              <label for="Automobiles">New</label>
+                            </div>
+
+                            <div class="option" id="openhihi">
+                              <input type="radio" class="radio" id="Film" name="category" value="">
+                              <label for="Film">Test Camera</label>
+                            </div>
+
+
+                            <div class="option" id="savehihi">
+                              <input type="radio" class="radio" id="science" name="category" value="">
+                              <label for="science">Test Mic</label>
+                            </div>
+
+
+                            <div class="option" id="p">
+                              <input type="radio" class="radio" id="Music" name="category" value="">
+                              <label for="Music">Open Worksheet</label>
+                            </div>
                           </div>
-
-                          <div class="option" id="openhihi">
-                            <input type="radio" class="radio" id="Film" name="category" value="">
-                            <label for="Film">Test Camera</label>
-                          </div>
-
-
-                          <div class="option" id="savehihi">
-                            <input type="radio" class="radio" id="science" name="category" value="">
-                            <label for="science">Test Mic</label>
-                          </div>
-
-
-                          <div class="option" id="p">
-                            <input type="radio" class="radio" id="Music" name="category" value="">
-                            <label for="Music">Open Worksheet</label>
+                          <div class="selected">
+                            Select Action
                           </div>
                         </div>
-                        <div class="selected">
-                          Select Action
-                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="block-control fl">
-                    <p id="moveObject" class="tool-btn tooltip-wrap active" data-layer="1">
-                      <img src="assets/images/notepad/move.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Move tool</span>
-                        <span class="t">Move Object</span>
-                      </span>
-                    </p>
-                    <p id="drwToggleDrawMode" class="tool-btn tooltip-wrap" data-layer="1">
-                      <img src="assets/images/notepad/pen.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Pen tool</span>
-                        <span class="t">Draw on the screen</span>
-                      </span>
-                    </p>
-                    <div class="hidden pencil-class style-popup-pencil tool-submenu">
-
-                      <ul id="pencils-body">
-                        <li class="icon-layer close-popup-pencil">
-                          <span style="line-height: 0;" class="icon-layer close-popup-pencil">
-                            Pen
-                          </span>
-                        </li>
-                        <li class="icon-layer drawing-mode-selector hr5 active" data-pencil="Pencil">
-                          <img style="width: 20px;height: 20px" src="assets/images/notepad/pen.png" />
-                        </li>
-                        <li class="icon-layer drawing-mode-selector hr5" data-pencil="Circle">
-                          <img style="width: 20px;height: 20px" src="assets/images/notepad/circle.png" />
-                        </li>
-                        <li class="icon-layer drawing-mode-selector hr5" data-pencil="Spray">
-                          <img style="width: 20px;height: 20px" src="assets/images/notepad/spray.png" />
-                        </li>
-                        <li class="icon-layer drawing-mode-selector hr5" data-pencil="Pattern">
-                          <img style="width: 20px;height: 20px" src="assets/images/notepad/pattern.png" />
-                        </li>
-                        <li class="icon-layer drawing-mode-selector hr5" data-pencil="Hline">
-                          <img style="width: 20px;height: 20px" src="assets/images/notepad/hline.png" />
-                        </li>
-                        <li class="icon-layer drawing-mode-selector hr5" data-pencil="Vline">
-                          <img style="width: 20px;height: 20px" src="assets/images/notepad/vline.png" />
-                        </li>
-                        <li class="icon-layer drawing-mode-selector hr5" data-pencil="Square">
-                          <img style="width: 20px;height: 20px" src="assets/images/notepad/square.png" />
-                        </li>
-                        <li class="icon-layer drawing-mode-selector hr5" data-pencil="Diamond">
-                          <img style="width: 20px;height: 20px" src="assets/images/notepad/diamond.png" />
-                        </li>
-                        <li style="width: fit-content;">
-                          <span style="line-height: 0; color: white;" id="drawing-line-width-label">
-                            1.67%
-                          </span>
-                        </li>
-                        <li style="width: 150px; z-index: 100;">
-                          <input type="range" value="1" min="0" max="60" id="drawing-line-width">
-                        </li>
-                        <li style="margin-left: 20px;">
-                          <span style="line-height: 0; color: white;">
-                            Color
-                          </span>
-                        </li>
-                        <li style="margin-top: 10px;">
-                          <input type="color" value="#000608" id="drawing-color" style="height: 20px;">
-                        </li>
-                      </ul>
-
-
-                    </div>
-                    <div class="hidden  hello close-class style-popup-close">
-                      <div class="col-md-9 text-popup-close">
-                        No layer is selected
-                      </div>
-                      <div class="col-md-3 no-padding">
-                        <button type="button" class="red-btn scel-btn close-popup-close">
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                    <p class="tool-btn tooltip-wrap" id="change-eraser">
-                      <img src="assets/images/notepad/eraser.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Eraser tool</span>
-                        <span class="t">Eraser lines and image from screen</span>
-                      </span>
-                    </p>
-                    <div class="hidden eraser-class style-popup-eraser tool-submenu">
-                      <ul id="erasers-body">
-                        <li class="icon-layer close-popup-eraser">
-                          <span>
-                            Eraser
-                          </span>
-                        </li>
-                        <li class="icon-layer btn-eraser active" data-eraser="30">
-                          <img style="width: 5px;height: 5px;" src="assets/images/notepad/eraser/1.png" />
-                        </li>
-                        <li class="icon-layer btn-eraser" data-eraser="50">
-                          <img style="width: 8px;height: 8px;" src="assets/images/notepad/eraser/1.png" />
-                        </li>
-                        <li class="icon-layer btn-eraser" data-eraser="70">
-                          <img style="width: 11px;height: 11px;" src="assets/images/notepad/eraser/1.png" />
-                        </li>
-                        <li class="icon-layer btn-eraser" data-eraser="90">
-                          <img style="width: 14px;height: 14px;" src="assets/images/notepad/eraser/1.png" />
-                        </li>
-                        <li class="icon-layer btn-eraser" data-eraser="100">
-                          <img style="width: 18px;height: 18px;" src="assets/images/notepad/eraser/1.png" />
-                        </li>
-                        <li class="icon-layer btn-eraser-clear border-bottom">
-                          <img src="assets/images/notepad/eraser-all.png" />
-                        </li>
-
-                      </ul>
-                    </div>
-
-                    <p class="tool-btn tooltip-wrap" id="change-color">
-                      <img src="assets/images/notepad/color/top/black.png" alt="Colors">
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Color tool</span>
-                        <span class="t">Select a line color</span>
-                      </span>
-                    </p>
-                    <div class="hidden color-class style-popup-color tool-submenu">
-                      <ul id="colors-body">
-                        <li class="icon-layer close-popup-color">
-                          <span>
-                            Color
-                          </span>
-                        </li>
-                        <li class="icon-layer btn-color" data-color="#ffffff" data-image-url="white.png">
-                          <img src="assets/images/notepad/color/white.png" />
-                        </li>
-                        <li class="icon-layer btn-color active" data-color="#000000" data-image-url="black.png">
-                          <img src="assets/images/notepad/color/black.png" />
-                        </li>
-                        <li class="icon-layer btn-color" data-color="#0000FF" data-image-url="blue.png">
-                          <img src="assets/images/notepad/color/blue.png" />
-                        </li>
-                        <li class="icon-layer btn-color" data-color="#FF0000" data-image-url="red.png">
-                          <img src="assets/images/notepad/color/red.png" />
-                        </li>
-                        <li class="icon-layer btn-color" data-color="#008000" data-image-url="green.png">
-                          <img src="assets/images/notepad/color/green.png" />
-                        </li>
-                        <li class="icon-layer btn-color" data-color="#C500AF" data-image-url="redPurple.png">
-                          <img src="assets/images/notepad/color/light_purple.png" />
-                        </li>
-                        <li class="icon-layer btn-color" data-color="#FF8D15" data-image-url="orange.png">
-                          <img src="assets/images/notepad/color/orange.png" />
-                        </li>
-                        <li class="icon-layer btn-color" data-color="#8E3AFF" data-image-url="purple.png">
-                          <img src="assets/images/notepad/color/purple.png" />
-                        </li>
-                      </ul>
-                    </div>
-
-                    <p class="block-layer tool-btn tooltip-wrap" id="add-layer">
-                      <img src="assets/images/notepad/layers.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Layer tool</span>
-                        <span class="t">Create, delete and manage the layers</span>
-                      </span>
-                    </p>
-                    <div class="hidden layer-class style-popup-layer tool-submenu">
-                      <ul id="layers-body">
-                        <li class="close-popup-layer">
-                          <p id="layer-span">
-                            Layers
-                          </p>
-                        </li>
-                        <li class="icon-layer btn-add-layer">
-                          <img src="assets/images/notepad/layer/add.png" />
-                        </li>
-                        <li class="icon-layer btn-delete-layer border-bottom">
-                          <img src="assets/images/notepad/layer/delete.png" />
-                        </li>
-                        <!-- vuong -->
-                        <li class="icon-layer icon-selector active" data-cnt="1" data-id="1">
-                          <img src="assets/images/notepad/layer/layer-1.png" />
-                        </li>
-                      </ul>
-                    </div>
-
-                    <p class="block-grid tool-btn tooltip-wrap" id="icon-grid">
-                      <img src="assets/images/notepad/grids.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Grids tool</span>
-                        <span class="t">Triggers guidelines and change background colors</span>
-                      </span>
-                    </p>
-                    <div class="hidden grid-class style-popup-grid tool-submenu">
-                      <ul id="grids-body">
-                        <li class="icon-layer close-popup-grid">
-                          <span>
-                            Grid
-                          </span>
-                        </li>
-                        <li class="icon-layer btn-color-grid active" data-color="#ffffff">
-                          <img src="assets/images/notepad/grid/white.png" />
-                        </li>
-                        <li class="icon-layer btn-color-grid" data-color="#dddddd">
-                          <img src="assets/images/notepad/grid/gray.png" />
-                        </li>
-                        <li class="icon-layer btn-color-grid" data-color="#fffdbf">
-                          <img src="assets/images/notepad/grid/yellow.png" />
-                        </li>
-                        <li class="icon-layer btn-color-grid border-bottom" data-color="#d1fffe">
-                          <img src="assets/images/notepad/grid/blue.png" />
-                        </li>
-                        <li class="icon-layer btn-grid" data-grid="1">
-                          <img src="assets/images/notepad/grid/type1.png" />
-                        </li>
-                        <li class="icon-layer btn-grid" data-grid="2">
-                          <img src="assets/images/notepad/grid/type2.png" />
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="block-image fl">
-                    <p id="textMode" class="add-image tool-btn tool-nosubmenu tooltip-wrap">
-                      <img src="assets/images/notepad/text_box.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Text tool</span>
-                        <span class="t">Create text on the screen</span>
-                      </span>
-                    </p>
-                    <!-- thêm đói tượng -->
-
                     <div class="block-control fl">
-                      <p id="shapeMode" class="tool-btn tooltip-wrap" data-layer="1">
-                        <img src="assets/images/notepad/shapes_basic_shares_yellow-512.png" />
-                        <span class="hidden tooltip-icon"></span>
+                      <p id="moveObject" class="tool-btn tooltip-wrap active" data-layer="1">
+                        <img src="assets/images/notepad/move.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Move tool</span>
+                          <span class="t">Move Object</span>
+                        </span>
+                      </p>
+                      <p id="drwToggleDrawMode" class="tool-btn tooltip-wrap" data-layer="1">
+                        <img src="assets/images/notepad/pen.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Pen tool</span>
+                          <span class="t">Draw on the screen</span>
+                        </span>
                       </p>
                       <div class="hidden pencil-class style-popup-pencil tool-submenu">
+
                         <ul id="pencils-body">
                           <li class="icon-layer close-popup-pencil">
-                            <span style="line-height: 0;" class="icon-layer close-popup-pencil">Geometric</span>
-                          </li>
-
-                          <li id="iconTriange" class="block-layer tooltip-wrap">
-                            <img src="assets/images/normal/triangle.png" />
-                            <span class="hidden tooltip-icon"></span>
-                          </li>
-
-                          <li id="iconCricle" class="block-layer tooltip-wrap">
-                            <img src="assets/images/normal/circle.png" />
-                            <span class="hidden tooltip-icon"></span>
-                          </li>
-
-                          <li id="iconElipse" class="block-layer tooltip-wrap">
-                            <img src="assets/images/normal/oval.png" />
-                            <span class="hidden tooltip-icon"></span>
-                          </li>
-
-                          <li id="iconRect" class="block-layer tooltip-wrap">
-                            <img src="assets/images/normal/rectangle.png" />
-                            <span class="hidden tooltip-icon"></span>
-                          </li>
-
-                          <li id="iconRoundedRect" class="block-layer tooltip-wrap">
-                            <img src="assets/images/normal/rectangle-rounded.png" />
-                            <span class="hidden tooltip-icon"></span>
-                          </li>
-
-                          <li id="iconArrowRightArrow" class="block-layer tooltip-wrap">
-                            <img src="assets/images/normal/arrow-right.png" />
-                            <span class="hidden tooltip-icon"></span>
-                          </li>
-
-                          <li id="iconTurnLeftArrow" class="block-layer tooltip-wrap">
-                            <img src="assets/images/normal/arrow-left.png" />
-                            <span class="hidden tooltip-icon"></span>
-                          </li>
-
-                          <li id="iconTwoWayArrow" class="block-layer tooltip-wrap">
-                            <img src="assets/images/normal/arrow-twoway.png" />
-                            <span class="hidden tooltip-icon"></span>
-                          </li>
-
-                          <li id="iconStar" class="block-layer tooltip-wrap">
-                            <img src="assets/images/normal/star.png" />
-                            <span class="hidden tooltip-icon"></span>
-                          </li>
-
-                          <li id="iconPolygon" class="block-layer tooltip-wrap">
-                            <img src="assets/images/normal/hexagon.png" />
-                            <span class="hidden tooltip-icon"></span>
-                          </li>
-
-                          <li id="iconTrapezoid" class="block-layer tooltip-wrap">
-                            <img src="assets/images/normal/trapezoid.png" />
-                            <span class="hidden tooltip-icon"></span>
-                          </li>
-
-                          <li id="iconPolygen" class="block-layer tooltip-wrap">
-                            <img src="assets/images/normal/pallalegram.png" />
-                            <span class="hidden tooltip-icon"></span>
-                          </li>
-
-                          <li id="iconArrowTo" class="block-layer tooltip-wrap">
-                            <img src="assets/images/normal/chevron.png" />
-                            <span class="hidden tooltip-icon"></span>
+                            <span style="line-height: 0;" class="icon-layer close-popup-pencil">
+                              Pen
                             </span>
                           </li>
-
-                          <li id="iconHeart" class="block-layer tooltip-wrap">
-                            <img src="assets/images/normal/heart-outline.png" />
-                            <span class="hidden tooltip-icon"></span>
+                          <li class="icon-layer drawing-mode-selector hr5 active" data-pencil="Pencil">
+                            <img style="width: 20px;height: 20px" src="assets/images/notepad/pen.png" />
+                          </li>
+                          <li class="icon-layer drawing-mode-selector hr5" data-pencil="Circle">
+                            <img style="width: 20px;height: 20px" src="assets/images/notepad/circle.png" />
+                          </li>
+                          <li class="icon-layer drawing-mode-selector hr5" data-pencil="Spray">
+                            <img style="width: 20px;height: 20px" src="assets/images/notepad/spray.png" />
+                          </li>
+                          <li class="icon-layer drawing-mode-selector hr5" data-pencil="Pattern">
+                            <img style="width: 20px;height: 20px" src="assets/images/notepad/pattern.png" />
+                          </li>
+                          <li class="icon-layer drawing-mode-selector hr5" data-pencil="Hline">
+                            <img style="width: 20px;height: 20px" src="assets/images/notepad/hline.png" />
+                          </li>
+                          <li class="icon-layer drawing-mode-selector hr5" data-pencil="Vline">
+                            <img style="width: 20px;height: 20px" src="assets/images/notepad/vline.png" />
+                          </li>
+                          <li class="icon-layer drawing-mode-selector hr5" data-pencil="Square">
+                            <img style="width: 20px;height: 20px" src="assets/images/notepad/square.png" />
+                          </li>
+                          <li class="icon-layer drawing-mode-selector hr5" data-pencil="Diamond">
+                            <img style="width: 20px;height: 20px" src="assets/images/notepad/diamond.png" />
+                          </li>
+                          <li style="width: fit-content;">
+                            <span style="line-height: 0; color: white;" id="drawing-line-width-label">
+                              1.67%
                             </span>
                           </li>
-                          <li class="icon-layer close-popup-pencil" style="width: fit-content;">
-                            <span style="line-height: 0;" class="icon-layer close-popup-pencil">Connect</span>
+                          <li style="width: 150px; z-index: 100;">
+                            <input type="range" value="1" min="0" max="60" id="drawing-line-width">
+                          </li>
+                          <li style="margin-left: 20px;">
+                            <span style="line-height: 0; color: white;">
+                              Color
+                            </span>
+                          </li>
+                          <li style="margin-top: 10px;">
+                            <input type="color" value="#000608" id="drawing-color" style="height: 20px;">
+                          </li>
+                        </ul>
+
+
+                      </div>
+                      <div class="hidden  hello close-class style-popup-close">
+                        <div class="col-md-9 text-popup-close">
+                          No layer is selected
+                        </div>
+                        <div class="col-md-3 no-padding">
+                          <button type="button" class="red-btn scel-btn close-popup-close">
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                      <p class="tool-btn tooltip-wrap" id="change-eraser">
+                        <img src="assets/images/notepad/eraser.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Eraser tool</span>
+                          <span class="t">Eraser lines and image from screen</span>
+                        </span>
+                      </p>
+                      <div class="hidden eraser-class style-popup-eraser tool-submenu">
+                        <ul id="erasers-body">
+                          <li class="icon-layer close-popup-eraser">
+                            <span>
+                              Eraser
+                            </span>
+                          </li>
+                          <li class="icon-layer btn-eraser active" data-eraser="30">
+                            <img style="width: 5px;height: 5px;" src="assets/images/notepad/eraser/1.png" />
+                          </li>
+                          <li class="icon-layer btn-eraser" data-eraser="50">
+                            <img style="width: 8px;height: 8px;" src="assets/images/notepad/eraser/1.png" />
+                          </li>
+                          <li class="icon-layer btn-eraser" data-eraser="70">
+                            <img style="width: 11px;height: 11px;" src="assets/images/notepad/eraser/1.png" />
+                          </li>
+                          <li class="icon-layer btn-eraser" data-eraser="90">
+                            <img style="width: 14px;height: 14px;" src="assets/images/notepad/eraser/1.png" />
+                          </li>
+                          <li class="icon-layer btn-eraser" data-eraser="100">
+                            <img style="width: 18px;height: 18px;" src="assets/images/notepad/eraser/1.png" />
+                          </li>
+                          <li class="icon-layer btn-eraser-clear border-bottom">
+                            <img src="assets/images/notepad/eraser-all.png" />
+                          </li>
+
+                        </ul>
+                      </div>
+
+                      <p class="tool-btn tooltip-wrap" id="change-color">
+                        <img src="assets/images/notepad/color/top/black.png" alt="Colors">
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Color tool</span>
+                          <span class="t">Select a line color</span>
+                        </span>
+                      </p>
+                      <div class="hidden color-class style-popup-color tool-submenu">
+                        <ul id="colors-body">
+                          <li class="icon-layer close-popup-color">
+                            <span>
+                              Color
+                            </span>
+                          </li>
+                          <li class="icon-layer btn-color" data-color="#ffffff" data-image-url="white.png">
+                            <img src="assets/images/notepad/color/white.png" />
+                          </li>
+                          <li class="icon-layer btn-color active" data-color="#000000" data-image-url="black.png">
+                            <img src="assets/images/notepad/color/black.png" />
+                          </li>
+                          <li class="icon-layer btn-color" data-color="#0000FF" data-image-url="blue.png">
+                            <img src="assets/images/notepad/color/blue.png" />
+                          </li>
+                          <li class="icon-layer btn-color" data-color="#FF0000" data-image-url="red.png">
+                            <img src="assets/images/notepad/color/red.png" />
+                          </li>
+                          <li class="icon-layer btn-color" data-color="#008000" data-image-url="green.png">
+                            <img src="assets/images/notepad/color/green.png" />
+                          </li>
+                          <li class="icon-layer btn-color" data-color="#C500AF" data-image-url="redPurple.png">
+                            <img src="assets/images/notepad/color/light_purple.png" />
+                          </li>
+                          <li class="icon-layer btn-color" data-color="#FF8D15" data-image-url="orange.png">
+                            <img src="assets/images/notepad/color/orange.png" />
+                          </li>
+                          <li class="icon-layer btn-color" data-color="#8E3AFF" data-image-url="purple.png">
+                            <img src="assets/images/notepad/color/purple.png" />
                           </li>
                         </ul>
                       </div>
-                    </div>
 
-                    <p id="normal-addimage" class="add-image tool-btn tool-nosubmenu tooltip-wrap" style="display: inline-block;">
-                      <img src="assets/images/notepad/upload_image.png" />
-                      <input id="imageMode" class="form-control inputfile input-sm" multiple type="file">
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Image tool</span>
-                        <span class="t">Insert images from the local drive</span>
-                      </span>
-                    </p>
-
-                    <p id="quiz-addimage" class="add-image tooltip-wrap" style="display: none;">
-                      <img src="assets/images/notepad/upload_image.png" />
-                      <input id="dndItem" class="form-control inputfile input-sm" type="file" multiple>
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Create Quiz</span>
-                        <span class="t">Upload dnd item</span>
-                      </span>
-                    </p>
-                    <div class="hidden np-sheet-info"></div>
-                    <div class="hidden screenshot-class style-popup-screenshot">
-                      <p class="name-popup">
-                        Capture Images
+                      <p class="block-layer tool-btn tooltip-wrap" id="add-layer">
+                        <img src="assets/images/notepad/layers.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Layer tool</span>
+                          <span class="t">Create, delete and manage the layers</span>
+                        </span>
                       </p>
-                      <ul>
-                        <li class="item-screenshot" style=" padding-right: 20px">
-                          <input type="checkbox" class="checkbox-style" id="screenshot-check" value="" />
-                        </li>
-                        <li class="item-screenshot" style=" width: 100px;">
-                          <form method="get">
-                            <select class="select-box-it form-control" id="select-screenshot">
-                              <option value="1">1</option>
-                              <option value="2">2</option>
-                              <option value="4">4</option>
-                              <option value="8">8</option>
-                              <option value="20">20</option>
-                              <option value="60">60</option>
-                              <option value="120">120</option>
-                              <option value="300">300</option>
-                              <option value="600">600</option>
-                            </select><span class="style-sec">Sec.</span>
-                          </form>
-                        </li>
-                      </ul>
-                    </div>
-                    <p id="icon-video" class="tooltip-wrap tool-btn tool-nosubmenu">
-                      <img src="assets/images/notepad/upload_video_player.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Video</span>
-                        <span class="t">Insert video from the Youtube</span>
-                      </span>
-                    </p>
-                    <div class="video-popup-class style-popup-video hidden">
-                      <input type="button" value="X" style="position: absolute; right: 0; top: 0; color: red; background-color: white; border: none;" id="btnclose">
-
-                      <p class="name-popup">
-                        Enter Video Url
-                      </p>
-                      <div class="content-popup">
-                        <input type="text" class="video-url" name="video-url" />
-                        <button class="video-btn">
-                          Add Video
-                        </button>
-                      </div>
-                    </div>
-
-                    <!-- attach file -->
-                    <p id="icon-attach-file" class="tooltip-wrap tool-btn tool-nosubmenu">
-                      <img src="assets/images/notepad/attach-file.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">File</span>
-                        <span class="t">Open file</span>
-                      </span>
-                    </p>
-
-                    <!-- microphone record -->
-                    <p id="icon-mic" class="tooltip-wrap tool-btn tool-nosubmenu">
-                      <img src="assets/images/notepad/microphone.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Speaker</span>
-                        <span class="t">Speaker Record</span>
-                      </span>
-                    </p>
-
-                    <!-- camera record -->
-                    <p id="icon-camera" class="tooltip-wrap tool-btn tool-nosubmenu" style="position: relative;">
-                      <img src="assets/images/notepad/camera.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Camera</span>
-                        <span class="t">Camera Record</span>
-                      </span>
-                      <small id="camera-mark" style="position: absolute; top: 19px; left: 18px; width: 4px; height: 4px; background: red; border-radius: 50%; display: none;"></small>
-                    </p>
-
-                    <!-- take camera photo -->
-                    <p id="icon-takephoto" class="tooltip-wrap tool-btn tool-nosubmenu">
-                      <img src="assets/images/notepad/takephoto.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Take Photo</span>
-                        <span class="t">Take a photo</span>
-                      </span>
-                    </p>
-                    <div class="takephoto-popup-class hidden device-popup">
-                      <div style="display: flex; justify-content: space-between; margin-bottom: 10xp; min-width: 300px;">
-                        <button id="takephoto-capture" type="button" class="btn btn-success">
-                          <i class="fa fa-camera-retro" aria-hidden="true"></i>
-                        </button>
-                        <button id="takephoto-close" type="button" class="btn btn-danger" style="margin-left: 42px;">X</button>
-                      </div>
-                      <span></span>
-                      <img  id="takephoto-img" alt="selfie" style="width: 300px; height: auto; border: 1px solid #ccc;">
-                      <ul class="list" style="margin-top: 10px;"></ul>
-                      <div style="display: none; position: relative;">
-                        <video id="takephoto-video" src="" width="640" height="480" autoplay></video>
-                        <canvas id="takephoto-canvas" width="640" height="480"></canvas>
-                      </div>
-                    </div>
-
-                    <!-- take screenshot -->
-                    <p id="icon-screenshot" class="tooltip-wrap tool-btn tool-nosubmenu">
-                      <img src="assets/images/notepad/screen-shot.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Screen Shot</span>
-                        <span class="t">Take a screenshot</span>
-                      </span>
-                    </p>
-                    <div class="screenshot-popup-class hidden device-popup">
-                      <div style="display: flex; justify-content: space-between; margin-bottom: 10xp;">
-                        <button id="screenshot-capture" type="button" class="btn btn-success">
-                          <i class="fa fa-picture-o" aria-hidden="true"></i>
-                        </button>
-                        <button id="screenshot-close" type="button" class="btn btn-danger" style="margin-left: 42px;">X</button>
-                      </div>
-                      <span></span>
-                      <img id="screenshot-img" src="" alt="screenshot" style="width: 600px; height: auto; border: 1px solid #ccc;">
-                    </div>
-
-                    <!-- connect objects -->
-                    <p id="icon-cover" class="tooltip-wrap tool-btn">
-                      <img src="assets/images/notepad/cover.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Connect Object</span>
-                        <span class="t">Choose, Connect Objects</span>
-                      </span>
-                    </p>
-
-                    <!-- group objects -->
-                    <p id="icon-group" class="tooltip-wrap tool-btn tool-nosubmenu">
-                      <img src="assets/images/notepad/group1.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Group</span>
-                        <span class="t">Group Active Objects</span>
-                      </span>
-                    </p>
-
-                    <!-- ungroup objects -->
-                    <p id="icon-ungroup" class="tooltip-wrap tool-btn tool-nosubmenu">
-                      <img src="assets/images/notepad/ungroup1.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Ungroup</span>
-                        <span class="t">Ungroup Active Object</span>
-                      </span>
-                    </p>
-
-                    <p id="icon-save" class="tooltip-wrap tool-btn tool-nosubmenu">
-                      <img src="assets/images/notepad/save.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Save</span>
-                        <span class="t">This layer will save</span>
-                      </span>
-                    </p>
-                    <p class="add-image tooltip-wrap tool-btn tool-nosubmenu">
-                      <img src="assets/images/notepad/add-file.png" />
-                      <input id="icon-load-canvas" accept=".zip, .json" class="form-control inputfile input-sm" type="file">
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Load canvas</span>
-                        <span class="t">Insert canvas from the local drive</span>
-                      </span>
-                    </p>
-                    <p id="icon-load" class="tooltip-wrap tool-btn tool-nosubmenu">
-                      <img src="assets/images/notepad/load-layer.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Load Layer</span>
-                        <span class="t">Load layer saved</span>
-                      </span>
-                    </p>
-
-                    <p id="createLatex" class="tooltip-wrap tool-btn tool-nosubmenu">
-                      <img src="assets/images/notepad/latex.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Load Latex</span>
-                        <span class="t">Load a Latex</span>
-                      </span>
-                    </p>
-
-                    <p id="omegaSymbol" class="tooltip-wrap tool-btn">
-                      <img src="assets/images/notepad/omega.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Load Symbol</span>
-                        <span class="t">Load a Symbol</span>
-                      </span>
-                    </p>
-
-                    <p id="zoomIn" class="tooltip-wrap tool-btn tool-nosubmenu">
-                      <img src="assets/images/notepad/zoom-in.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Zoom in</span>
-                        <span class="t c-zoom">Current zoom: 100%</span>
-                      </span>
-                    </p>
-
-                    <p id="zoomOut" class="tooltip-wrap tool-btn tool-nosubmenu">
-                      <img src="assets/images/notepad/zoom-out.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Zoom out</span>
-                        <span class="t c-zoom">Current zoom: 100%</span>
-                      </span>
-                    </p>
-
-                    <p id="svg" class="tooltip-wrap tool-btn">
-                      <img src="assets/images/notepad/svg.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Load SVG</span>
-                        <span class="t">Load a SVG</span>
-                      </span>
-                    </p>
-
-                    <p class="block-quiz tool-btn tooltip-wrap" id="quiz">
-                      <img src="assets/images/notepad/puzzle.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Quiz</span>
-                        <span class="t">Create, do and save quiz</span>
-                      </span>
-                    </p>
-                    <div class="hidden quiz-class style-popup-layer tool-submenu">
-                      <ul id="quizs-body">
-                        <li class="icon-layer close-popup-quiz">
-                          <span style="margin-left: 16px;">
-                            Quiz
-                          </span>
-                        </li>
-                        <li class="icon-layer">
-                          <select id="quiz-type">
-                            <option value="quiz-1">Select Object</option>
-                            <option value="quiz-2">Input Object</option>
-                            <option value="quiz-3">Match Object</option>
-                            <!-- <option value="quiz-4">relational puzzles</option>
-                                                        <option value="quiz-5">and logic puzzles</option> -->
-                          </select>
-                        </li>
-                        <li class="icon-layer">
-                          <p id="quiz-create" class="tooltip-wrap">
-                            <img src="assets/images/notepad/create-quiz.png">
-                            <span class="hidden tooltip-icon">
-                              <span class="h">Create Quiz</span>
-                            </span>
-                          </p>
-                        </li>
-                        <li class="icon-layer" style="color: #ccc;">
-                          <p class="tooltip-wrap input-container">
-                            <input id="quiz-input-file" type="file" name="quiz-file" accept=".json">
-                            <label for="quiz-input-file" style="color: #aaa; margin: 0;">
-                              <img src="assets/images/notepad/add-file.png" />
-                            </label>
-                            <span class="hidden tooltip-icon">
-                              <span class="h">Choose a file</span>
-                            </span>
-                          </p>
-                        </li>
-                        <li class="icon-layer">
-                          <p id="open-quiz-modal" class="tooltip-wrap" style="display: block;">
-                            <img src="assets/images/notepad/pen.png" />
-                            <span class="hidden tooltip-icon">
-                              <span class="h">Text content</span>
-                              <span class="t">Input text content</span>
-                            </span>
-                          </p>
-                          <p id="create-table-empty" class="tooltip-wrap" style="display: none;">
-                            <img src="assets/images/notepad/pen.png" />
-                            <span class="hidden tooltip-icon">
-                              <span class="h">Text content</span>
-                              <span class="t">Input text content</span>
-                            </span>
-                          </p>
-                        </li>
-                        <li class="icon-layer">
-                          <p id="quiz-answer" class="tooltip-wrap">
-                            <img src="assets/images/notepad/create-answer.png" />
-                            <span class="hidden tooltip-icon">
-                              <span class="h">Answer</span>
-                            </span>
-                          </p>
-
-                        </li>
-                        <li class="icon-layer">
-                          <p id="quiz-view-answer" class="tooltip-wrap">
-                            <img src="assets/images/notepad/unview-answer.png" />
-                            <span class="hidden tooltip-icon">
-                              <span class="h">View Answer</span>
-                            </span>
-                          </p>
-                        </li>
-                        <li class="icon-layer">
-                          <p id="quiz-doquiz" class="tooltip-wrap">
-                            <img src="assets/images/notepad/edit.png" />
-                            <span class="hidden tooltip-icon">
-                              <span class="h">Do Quiz</span>
-                            </span>
-                          </p>
-                        </li>
-                        <li class="icon-layer">
-                          <p id="quiz-check" class="tooltip-wrap">
-                            <img src="assets/images/notepad/check.png" />
-                            <span class="hidden tooltip-icon">
-                              <span class="h">Check</span>
-                            </span>
-                          </p>
-                        </li>
-                        <li class="icon-layer">
-                          <p id="quiz-save" class="tooltip-wrap">
-                            <img src="assets/images/notepad/save.png" />
-                            <span class="hidden tooltip-icon">
-                              <span class="h">Save Quiz</span>
-                            </span>
-                          </p>
-                        </li>
-
-                      </ul>
-                    </div>
-
-                    <p class="block-line tool-btn tooltip-wrap" id="lines">
-                      <img src="assets/images/notepad/line.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Lines</span>
-                        <span class="t">Choose type of line</span>
-                      </span>
-                    </p>
-
-                    <div class="hidden lines-class style-popup-layer tool-submenu">
-
-                      <!-- line type 1 simple line -->
-                      <p id="simple-line" class="draw-line">
-                        <img src="assets/images/notepad/arrow-trend-up-no-background.png" />
-                      </p>
-
-                      <!-- line type 2 multiple line -->
-                      <p id="multiple-line" class="draw-line">
-                        <img src="assets/images/notepad/line.png" />
-                      </p>
-
-                      <!-- line type 3 waving line -->
-                      <p id="waving-line" class="draw-line">
-                        <img src="assets/images/notepad/waveline5.png" />
-                      </p>
-
-                      <!-- line type 4 dash line -->
-                      <p id="dash-line" class="draw-line">
-                        <img src="assets/images/notepad/vline.png" />
-                      </p>
-
-                      <!-- line type 5 curve line -->
-                      <p id="curve-line" class="draw-line">
-                        <img src="assets/images/notepad/icon-curve.png" />
-                      </p>
-
-                      <!-- line type 6 dot line -->
-                      <p id="dot-line" class="draw-line">
-                        <img src="assets/images/notepad/dotlineGraph.png" />
-                      </p>
-                    </div>
-                    <p id="reset" class="tooltip-wrap tool-btn">
-                      <img src="assets/images/notepad/redo.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Reset</span>
-                        <span class="t">Reset the canvas to original position</span>
-                      </span>
-                    </p>
-
-
-                    <div class="hidden symbol-popup-class style-popup-symbol" id="listOfSymbol">
-                      <div>
-                        <div class="header-symbol" style="padding: 4px 16px;">
-                          <h1 style="font-size: 24px;">Symbols</h1>
-                          <button class="close-listIcon" type="button" style="margin-top: 10px; border: none; background: transparent;">
-                            <i class="fa fa-times" style="color: red; font-size: 25px"></i>
-                          </button>
-                        </div>
-
-                        <br>
-
-                        <label><b>Toán</b></label>
-                        <div id='math-symbol'></div>
-
-                        <label><b>Vật lý</b></label>
-                        <div id='physisc-symbol'></div>
-
-                        <label><b>Hóa học</b></label>
-                        <div id='chemistry-symbol'></div>
-
-                        <label><b>Sinh học</b></label>
-                        <div id='biology-symbol'>
-                          <p class="tooltip-wrap">
-                            <img src="assets/images/latex/men.png">
-                          </p>
-                          <p class="tooltip-wrap">
-                            <img src="assets/images/latex/women.png">
-                          </p>
-                        </div>
-
+                      <div class="hidden layer-class style-popup-layer tool-submenu">
+                        <ul id="layers-body">
+                          <li class="close-popup-layer">
+                            <p id="layer-span">
+                              Layers
+                            </p>
+                          </li>
+                          <li class="icon-layer btn-add-layer">
+                            <img src="assets/images/notepad/layer/add.png" />
+                          </li>
+                          <li class="icon-layer btn-delete-layer border-bottom">
+                            <img src="assets/images/notepad/layer/delete.png" />
+                          </li>
+                          <!-- vuong -->
+                          <li class="icon-layer icon-selector active" data-cnt="1" data-id="1">
+                            <img src="assets/images/notepad/layer/layer-1.png" />
+                          </li>
+                        </ul>
                       </div>
 
-                    </div>
+                      <p class="block-grid tool-btn tooltip-wrap" id="icon-grid">
+                        <img src="assets/images/notepad/grids.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Grids tool</span>
+                          <span class="t">Triggers guidelines and change background colors</span>
+                        </span>
+                      </p>
+                      <div class="hidden grid-class style-popup-grid tool-submenu">
+                        <ul id="grids-body">
+                          <li class="icon-layer close-popup-grid">
+                            <span>
+                              Grid
+                            </span>
+                          </li>
+                          <li class="icon-layer btn-color-grid active" data-color="#ffffff">
+                            <img src="assets/images/notepad/grid/white.png" />
+                          </li>
+                          <li class="icon-layer btn-color-grid" data-color="#dddddd">
+                            <img src="assets/images/notepad/grid/gray.png" />
+                          </li>
+                          <li class="icon-layer btn-color-grid" data-color="#fffdbf">
+                            <img src="assets/images/notepad/grid/yellow.png" />
+                          </li>
+                          <li class="icon-layer btn-color-grid border-bottom" data-color="#d1fffe">
+                            <img src="assets/images/notepad/grid/blue.png" />
+                          </li>
+                          <li class="icon-layer btn-grid" data-grid="1">
+                            <img src="assets/images/notepad/grid/type1.png" />
+                          </li>
+                          <li class="icon-layer btn-grid" data-grid="2">
+                            <img src="assets/images/notepad/grid/type2.png" />
+                          </li>
+                        </ul>
+                      </div>
+                    
+                      <p id="textMode" class="add-image tool-btn tool-nosubmenu tooltip-wrap">
+                        <img src="assets/images/notepad/text_box.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Text tool</span>
+                          <span class="t">Create text on the screen</span>
+                        </span>
+                      </p>
+                      <!-- thêm đói tượng -->
 
-                    <div class="hidden symbol-popup-class style-popup-symbol" id="listIconSVG">
-                      <div style="border: 1px solid #ccc;">
-                        <div class="header-symbol" style="display: flex; justify-content: space-between;">
-                          <h1 style="margin-left: 32px; font-size: 24px;">IconSVG</h1>
-                          <button class="close-listIcon" type="button" style="margin-right: 20px; border: none; background: transparent;">
-                            <i class="fa fa-times" style="color: red; font-size: 25px"></i>
-                          </button>
-                        </div>
-                        <br>
-                        <div style="margin: 0 16px;">
-                          <div style="display: flex; width: fit-content; height: 36px; align-items: center; border: 1px solid #ccc;border-radius: 4px; overflow: hidden;">
-                            <input type="text" placeholder="Search" id="svg-search" style="margin: 0; padding: 0 16px; border: none;">
-                            <button type="button" class="btn btn-default" style="height: 40px; border: none;">
-                              <i class="fa fa-search" aria-hidden="true"></i>
-                            </button>
-                          </div>
-                        </div>
-                        <br>
-                        <p id="not-found" style="margin: 8px 16px;">
-                          No svg found, please change search criteria...
+                      <div class="block-control fl">
+                        <p id="shapeMode" class="tool-btn tooltip-wrap" data-layer="1">
+                          <img src="assets/images/notepad/shapes_basic_shares_yellow-512.png" />
+                          <span class="hidden tooltip-icon"></span>
                         </p>
-                        <div id="iconSVG" style="margin: 8px 16px;">
+                        <div class="hidden pencil-class style-popup-pencil tool-submenu">
+                          <ul id="pencils-body">
+                            <li class="icon-layer close-popup-pencil">
+                              <span style="line-height: 0;" class="icon-layer close-popup-pencil">Geometric</span>
+                            </li>
+
+                            <li id="iconTriange" class="block-layer tooltip-wrap">
+                              <img src="assets/images/normal/triangle.png" />
+                              <span class="hidden tooltip-icon"></span>
+                            </li>
+
+                            <li id="iconCricle" class="block-layer tooltip-wrap">
+                              <img src="assets/images/normal/circle.png" />
+                              <span class="hidden tooltip-icon"></span>
+                            </li>
+
+                            <li id="iconElipse" class="block-layer tooltip-wrap">
+                              <img src="assets/images/normal/oval.png" />
+                              <span class="hidden tooltip-icon"></span>
+                            </li>
+
+                            <li id="iconRect" class="block-layer tooltip-wrap">
+                              <img src="assets/images/normal/rectangle.png" />
+                              <span class="hidden tooltip-icon"></span>
+                            </li>
+
+                            <li id="iconRoundedRect" class="block-layer tooltip-wrap">
+                              <img src="assets/images/normal/rectangle-rounded.png" />
+                              <span class="hidden tooltip-icon"></span>
+                            </li>
+
+                            <li id="iconArrowRightArrow" class="block-layer tooltip-wrap">
+                              <img src="assets/images/normal/arrow-right.png" />
+                              <span class="hidden tooltip-icon"></span>
+                            </li>
+
+                            <li id="iconTurnLeftArrow" class="block-layer tooltip-wrap">
+                              <img src="assets/images/normal/arrow-left.png" />
+                              <span class="hidden tooltip-icon"></span>
+                            </li>
+
+                            <li id="iconTwoWayArrow" class="block-layer tooltip-wrap">
+                              <img src="assets/images/normal/arrow-twoway.png" />
+                              <span class="hidden tooltip-icon"></span>
+                            </li>
+
+                            <li id="iconStar" class="block-layer tooltip-wrap">
+                              <img src="assets/images/normal/star.png" />
+                              <span class="hidden tooltip-icon"></span>
+                            </li>
+
+                            <li id="iconPolygon" class="block-layer tooltip-wrap">
+                              <img src="assets/images/normal/hexagon.png" />
+                              <span class="hidden tooltip-icon"></span>
+                            </li>
+
+                            <li id="iconTrapezoid" class="block-layer tooltip-wrap">
+                              <img src="assets/images/normal/trapezoid.png" />
+                              <span class="hidden tooltip-icon"></span>
+                            </li>
+
+                            <li id="iconPolygen" class="block-layer tooltip-wrap">
+                              <img src="assets/images/normal/pallalegram.png" />
+                              <span class="hidden tooltip-icon"></span>
+                            </li>
+
+                            <li id="iconArrowTo" class="block-layer tooltip-wrap">
+                              <img src="assets/images/normal/chevron.png" />
+                              <span class="hidden tooltip-icon"></span>
+                              </span>
+                            </li>
+
+                            <li id="iconHeart" class="block-layer tooltip-wrap">
+                              <img src="assets/images/normal/heart-outline.png" />
+                              <span class="hidden tooltip-icon"></span>
+                              </span>
+                            </li>
+                            <li class="icon-layer close-popup-pencil" style="width: fit-content;">
+                              <span style="line-height: 0;" class="icon-layer close-popup-pencil">Connect</span>
+                            </li>
+                          </ul>
                         </div>
                       </div>
 
+                      <p id="normal-addimage" class="add-image tool-btn tool-nosubmenu tooltip-wrap" style="display: inline-block;">
+                        <img src="assets/images/notepad/upload_image.png" />
+                        <input id="imageMode" class="form-control inputfile input-sm" multiple type="file">
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Image tool</span>
+                          <span class="t">Insert images from the local drive</span>
+                        </span>
+                      </p>
+
+                      <p id="quiz-addimage" class="add-image tooltip-wrap" style="display: none;">
+                        <img src="assets/images/notepad/upload_image.png" />
+                        <input id="dndItem" class="form-control inputfile input-sm" type="file" multiple>
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Create Quiz</span>
+                          <span class="t">Upload dnd item</span>
+                        </span>
+                      </p>
+                      <div class="hidden np-sheet-info"></div>
+                      <div class="hidden screenshot-class style-popup-screenshot">
+                        <p class="name-popup">
+                          Capture Images
+                        </p>
+                        <ul>
+                          <li class="item-screenshot" style=" padding-right: 20px">
+                            <input type="checkbox" class="checkbox-style" id="screenshot-check" value="" />
+                          </li>
+                          <li class="item-screenshot" style=" width: 100px;">
+                            <form method="get">
+                              <select class="select-box-it form-control" id="select-screenshot">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="4">4</option>
+                                <option value="8">8</option>
+                                <option value="20">20</option>
+                                <option value="60">60</option>
+                                <option value="120">120</option>
+                                <option value="300">300</option>
+                                <option value="600">600</option>
+                              </select><span class="style-sec">Sec.</span>
+                            </form>
+                          </li>
+                        </ul>
+                      </div>
+                      <p id="icon-video" class="tooltip-wrap tool-btn tool-nosubmenu">
+                        <img src="assets/images/notepad/upload_video_player.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Video</span>
+                          <span class="t">Insert video from the Youtube</span>
+                        </span>
+                      </p>
+
+                      <!-- attach file -->
+                      <p id="icon-attach-file" class="tooltip-wrap tool-btn tool-nosubmenu">
+                        <img src="assets/images/notepad/attach-file.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">File</span>
+                          <span class="t">Open file</span>
+                        </span>
+                      </p>
+
+                      <!-- microphone record -->
+                      <p id="icon-mic" class="tooltip-wrap tool-btn tool-nosubmenu">
+                        <img src="assets/images/notepad/microphone.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Speaker</span>
+                          <span class="t">Speaker Record</span>
+                        </span>
+                      </p>
+
+                      <!-- camera record -->
+                      <p id="icon-camera" class="tooltip-wrap tool-btn tool-nosubmenu" style="position: relative;">
+                        <img src="assets/images/notepad/camera.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Camera</span>
+                          <span class="t">Camera Record</span>
+                        </span>
+                        <small id="camera-mark" style="position: absolute; top: 19px; left: 18px; width: 4px; height: 4px; background: red; border-radius: 50%; display: none;"></small>
+                      </p>
+
+                      <!-- take camera photo -->
+                      <p id="icon-takephoto" class="tooltip-wrap tool-btn tool-nosubmenu">
+                        <img src="assets/images/notepad/takephoto.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Take Photo</span>
+                          <span class="t">Take a photo</span>
+                        </span>
+                      </p>
+
+                      <!-- take screenshot -->
+                      <p id="icon-screenshot" class="tooltip-wrap tool-btn tool-nosubmenu">
+                        <img src="assets/images/notepad/screen-shot.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Screen Shot</span>
+                          <span class="t">Take a screenshot</span>
+                        </span>
+                      </p>
+
+                      <!-- connect objects -->
+                      <p id="icon-cover" class="tooltip-wrap tool-btn">
+                        <img src="assets/images/notepad/cover.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Connect Object</span>
+                          <span class="t">Choose, Connect Objects</span>
+                        </span>
+                      </p>
+
+                      <!-- group objects -->
+                      <p id="icon-group" class="tooltip-wrap tool-btn tool-nosubmenu">
+                        <img src="assets/images/notepad/group1.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Group</span>
+                          <span class="t">Group Active Objects</span>
+                        </span>
+                      </p>
+
+                      <!-- ungroup objects -->
+                      <p id="icon-ungroup" class="tooltip-wrap tool-btn tool-nosubmenu">
+                        <img src="assets/images/notepad/ungroup1.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Ungroup</span>
+                          <span class="t">Ungroup Active Object</span>
+                        </span>
+                      </p>
+
+                      <p id="icon-save" class="tooltip-wrap tool-btn tool-nosubmenu">
+                        <img src="assets/images/notepad/save.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Save</span>
+                          <span class="t">This layer will save</span>
+                        </span>
+                      </p>
+                      <p class="add-image tooltip-wrap tool-btn tool-nosubmenu">
+                        <img src="assets/images/notepad/add-file.png" />
+                        <input id="icon-load-canvas" accept=".zip, .json" class="form-control inputfile input-sm" type="file">
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Load canvas</span>
+                          <span class="t">Insert canvas from the local drive</span>
+                        </span>
+                      </p>
+                      <p id="icon-load" class="tooltip-wrap tool-btn tool-nosubmenu">
+                        <img src="assets/images/notepad/load-layer.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Load Layer</span>
+                          <span class="t">Load layer saved</span>
+                        </span>
+                      </p>
+
+                      <p id="createLatex" class="tooltip-wrap tool-btn tool-nosubmenu">
+                        <img src="assets/images/notepad/latex.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Load Latex</span>
+                          <span class="t">Load a Latex</span>
+                        </span>
+                      </p>
+
+                      <p id="omegaSymbol" class="tooltip-wrap tool-btn">
+                        <img src="assets/images/notepad/omega.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Load Symbol</span>
+                          <span class="t">Load a Symbol</span>
+                        </span>
+                      </p>
+
+                      <p id="zoomIn" class="tooltip-wrap tool-btn tool-nosubmenu">
+                        <img src="assets/images/notepad/zoom-in.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Zoom in</span>
+                          <span class="t c-zoom">Current zoom: 100%</span>
+                        </span>
+                      </p>
+
+                      <p id="zoomOut" class="tooltip-wrap tool-btn tool-nosubmenu">
+                        <img src="assets/images/notepad/zoom-out.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Zoom out</span>
+                          <span class="t c-zoom">Current zoom: 100%</span>
+                        </span>
+                      </p>
+
+                      <p id="svg" class="tooltip-wrap tool-btn">
+                        <img src="assets/images/notepad/svg.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Load SVG</span>
+                          <span class="t">Load a SVG</span>
+                        </span>
+                      </p>
+
+                      <p class="block-quiz tool-btn tooltip-wrap" id="quiz">
+                        <img src="assets/images/notepad/puzzle.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Quiz</span>
+                          <span class="t">Create, do and save quiz</span>
+                        </span>
+                      </p>
+                      <div class="hidden quiz-class style-popup-layer tool-submenu">
+                        <ul id="quizs-body">
+                          <li class="icon-layer close-popup-quiz">
+                            <span style="margin-left: 16px;">
+                              Quiz
+                            </span>
+                          </li>
+                          <li class="icon-layer">
+                            <select id="quiz-type">
+                              <option value="quiz-1">Select Object</option>
+                              <option value="quiz-2">Input Object</option>
+                              <option value="quiz-3">Match Object</option>
+                              <!-- <option value="quiz-4">relational puzzles</option>
+                                                          <option value="quiz-5">and logic puzzles</option> -->
+                            </select>
+                          </li>
+                          <li class="icon-layer">
+                            <p id="quiz-create" class="tooltip-wrap">
+                              <img src="assets/images/notepad/create-quiz.png">
+                              <span class="hidden tooltip-icon">
+                                <span class="h">Create Quiz</span>
+                              </span>
+                            </p>
+                          </li>
+                          <li class="icon-layer" style="color: #ccc;">
+                            <p class="tooltip-wrap input-container">
+                              <input id="quiz-input-file" type="file" name="quiz-file" accept=".json">
+                              <label for="quiz-input-file" style="color: #aaa; margin: 0;">
+                                <img src="assets/images/notepad/add-file.png" />
+                              </label>
+                              <span class="hidden tooltip-icon">
+                                <span class="h">Choose a file</span>
+                              </span>
+                            </p>
+                          </li>
+                          <li class="icon-layer">
+                            <p id="open-quiz-modal" class="tooltip-wrap" style="display: block;">
+                              <img src="assets/images/notepad/pen.png" />
+                              <span class="hidden tooltip-icon">
+                                <span class="h">Text content</span>
+                                <span class="t">Input text content</span>
+                              </span>
+                            </p>
+                            <p id="create-table-empty" class="tooltip-wrap" style="display: none;">
+                              <img src="assets/images/notepad/pen.png" />
+                              <span class="hidden tooltip-icon">
+                                <span class="h">Text content</span>
+                                <span class="t">Input text content</span>
+                              </span>
+                            </p>
+                          </li>
+                          <li class="icon-layer">
+                            <p id="quiz-answer" class="tooltip-wrap">
+                              <img src="assets/images/notepad/create-answer.png" />
+                              <span class="hidden tooltip-icon">
+                                <span class="h">Answer</span>
+                              </span>
+                            </p>
+
+                          </li>
+                          <li class="icon-layer">
+                            <p id="quiz-view-answer" class="tooltip-wrap">
+                              <img src="assets/images/notepad/unview-answer.png" />
+                              <span class="hidden tooltip-icon">
+                                <span class="h">View Answer</span>
+                              </span>
+                            </p>
+                          </li>
+                          <li class="icon-layer">
+                            <p id="quiz-doquiz" class="tooltip-wrap">
+                              <img src="assets/images/notepad/edit.png" />
+                              <span class="hidden tooltip-icon">
+                                <span class="h">Do Quiz</span>
+                              </span>
+                            </p>
+                          </li>
+                          <li class="icon-layer">
+                            <p id="quiz-check" class="tooltip-wrap">
+                              <img src="assets/images/notepad/check.png" />
+                              <span class="hidden tooltip-icon">
+                                <span class="h">Check</span>
+                              </span>
+                            </p>
+                          </li>
+                          <li class="icon-layer">
+                            <p id="quiz-save" class="tooltip-wrap">
+                              <img src="assets/images/notepad/save.png" />
+                              <span class="hidden tooltip-icon">
+                                <span class="h">Save Quiz</span>
+                              </span>
+                            </p>
+                          </li>
+
+                        </ul>
+                      </div>
+
+                      <p class="block-line tool-btn tooltip-wrap" id="lines">
+                        <img src="assets/images/notepad/line.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Lines</span>
+                          <span class="t">Choose type of line</span>
+                        </span>
+                      </p>
+
+                      <div class="hidden lines-class style-popup-layer tool-submenu">
+
+                        <!-- line type 1 simple line -->
+                        <p id="simple-line" class="draw-line">
+                          <img src="assets/images/notepad/arrow-trend-up-no-background.png" />
+                        </p>
+
+                        <!-- line type 2 multiple line -->
+                        <p id="multiple-line" class="draw-line">
+                          <img src="assets/images/notepad/line.png" />
+                        </p>
+
+                        <!-- line type 3 waving line -->
+                        <p id="waving-line" class="draw-line">
+                          <img src="assets/images/notepad/waveline5.png" />
+                        </p>
+
+                        <!-- line type 4 dash line -->
+                        <p id="dash-line" class="draw-line">
+                          <img src="assets/images/notepad/vline.png" />
+                        </p>
+
+                        <!-- line type 5 curve line -->
+                        <p id="curve-line" class="draw-line">
+                          <img src="assets/images/notepad/icon-curve.png" />
+                        </p>
+
+                        <!-- line type 6 dot line -->
+                        <p id="dot-line" class="draw-line">
+                          <img src="assets/images/notepad/dotlineGraph.png" />
+                        </p>
+                      </div>
+                      <p id="reset" class="tooltip-wrap tool-btn">
+                        <img src="assets/images/notepad/redo.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Reset</span>
+                          <span class="t">Reset the canvas to original position</span>
+                        </span>
+                      </p>
+
+
+                      
+
+                      
+
+
+                      <p id="icon-save-api" class="tooltip-wrap tool-btn tool-nosubmenu">
+                        <img src="assets/images/notepad/save.png" />
+                        <span class="hidden tooltip-icon">
+                          <span class="h">Save</span>
+                          <span class="t">This worksheet will be saved</span>
+                        </span>
+                      </p>
                     </div>
-
-
-                    <p id="icon-save-api" class="tooltip-wrap tool-btn tool-nosubmenu">
-                      <img src="assets/images/notepad/save.png" />
-                      <span class="hidden tooltip-icon">
-                        <span class="h">Save</span>
-                        <span class="t">This worksheet will be saved</span>
-                      </span>
-                    </p>
                   </div>
                 </div>
+                
+                
+                <div class="screenshot-popup-class hidden device-popup">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 10xp;">
+                    <button id="screenshot-capture" type="button" class="btn btn-success">
+                      <i class="fa fa-picture-o" aria-hidden="true"></i>
+                    </button>
+                    <button id="screenshot-close" type="button" class="btn btn-danger" style="margin-left: 42px;">X</button>
+                  </div>
+                  <span></span>
+                  <img id="screenshot-img" src="" alt="screenshot" style="width: 600px; height: auto; border: 1px solid #ccc;">
+                </div>
 
+                <div class="takephoto-popup-class hidden device-popup">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 10xp; min-width: 300px;">
+                    <button id="takephoto-capture" type="button" class="btn btn-success">
+                      <i class="fa fa-camera-retro" aria-hidden="true"></i>
+                    </button>
+                    <button id="takephoto-close" type="button" class="btn btn-danger" style="margin-left: 42px;">X</button>
+                  </div>
+                  <span></span>
+                  <img  id="takephoto-img" alt="selfie" style="width: 300px; height: auto; border: 1px solid #ccc;">
+                  <ul class="list" style="margin-top: 10px;"></ul>
+                  <div style="display: none; position: relative;">
+                    <video id="takephoto-video" src="" width="640" height="480" autoplay></video>
+                    <canvas id="takephoto-canvas" width="640" height="480"></canvas>
+                  </div>
+                </div>
+                <div class="video-popup-class style-popup-video hidden">
+                  <input type="button" value="X" style="position: absolute; right: 0; top: 0; color: red; background-color: white; border: none;" id="btnclose">
+
+                  <p class="name-popup">
+                    Enter Video Url
+                  </p>
+                  <div class="content-popup">
+                    <input type="text" class="video-url" name="video-url" />
+                    <button class="video-btn">
+                      Add Video
+                    </button>
+                  </div>
+                </div>
+                <div class="hidden symbol-popup-class style-popup-symbol" id="listIconSVG">
+                  <div style="border: 1px solid #ccc;">
+                    <div class="header-symbol" style="display: flex; justify-content: space-between;">
+                      <h1 style="margin-left: 32px; font-size: 24px;">IconSVG</h1>
+                      <button class="close-listIcon" type="button" style="margin-right: 20px; border: none; background: transparent;">
+                        <i class="fa fa-times" style="color: red; font-size: 25px"></i>
+                      </button>
+                    </div>
+                    <br>
+                    <div style="margin: 0 16px;">
+                      <div style="display: flex; width: fit-content; height: 36px; align-items: center; border: 1px solid #ccc;border-radius: 4px; overflow: hidden;">
+                        <input type="text" placeholder="Search" id="svg-search" style="margin: 0; padding: 0 16px; border: none;">
+                        <button type="button" class="btn btn-default" style="height: 40px; border: none;">
+                          <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <br>
+                    <p id="not-found" style="margin: 8px 16px;">
+                      No svg found, please change search criteria...
+                    </p>
+                    <div id="iconSVG" style="margin: 8px 16px;">
+                    </div>
+                  </div>
+
+                </div>
+                <div class="hidden symbol-popup-class style-popup-symbol" id="listOfSymbol">
+                  <div>
+                    <div class="header-symbol" style="padding: 4px 16px;">
+                      <h1 style="font-size: 24px;">Symbols</h1>
+                      <button class="close-listIcon" type="button" style="margin-top: 10px; border: none; background: transparent;">
+                        <i class="fa fa-times" style="color: red; font-size: 25px"></i>
+                      </button>
+                    </div>
+
+                    <br>
+
+                    <label><b>Toán</b></label>
+                    <div id='math-symbol'></div>
+
+                    <label><b>Vật lý</b></label>
+                    <div id='physisc-symbol'></div>
+
+                    <label><b>Hóa học</b></label>
+                    <div id='chemistry-symbol'></div>
+
+                    <label><b>Sinh học</b></label>
+                    <div id='biology-symbol'>
+                      <p class="tooltip-wrap">
+                        <img src="assets/images/latex/men.png">
+                      </p>
+                      <p class="tooltip-wrap">
+                        <img src="assets/images/latex/women.png">
+                      </p>
+                    </div>
+
+                  </div>
+
+                </div>
                 <div class="block-right">
                   <p class="block-time hidden">
                     <img src="assets/icons/icon_Timer.png" alt="Timer">
@@ -1276,6 +1281,10 @@
                       </div>
                     </div>
                   </div>
+                </div>
+
+                <div class="btn-responsive">
+                  <p id="toolbar-expand-btn"><i class="fa fa-angle-double-down" aria-hidden="true"></i></p>
                 </div>
               </div>
             </div>
@@ -1864,7 +1873,7 @@
               <button id="mic-close" type="button" class="btn btn-danger">X</button>
             </div>
             <input id="mic-file" class="hidden" type="file" name="mic-file" accept="audio/*">
-            <audio id="micRecorded" src="" controls></audio>
+            <audio id="micRecorded" src="" controls crossorigin="anonymous"></audio>
 
             <div class="edit-form-svg">
               <div class="btn-toolbar btn-group">
@@ -1991,7 +2000,7 @@
               <button id="camera-close" type="button" class="btn btn-danger">X</button>
             </div>
             <input id="camera-file" class="hidden" type="file" name="camera-file" accept="video/*">
-            <video id="cameraRecorded" width="300" controls></video>
+            <video id="cameraRecorded" width="300" controls crossorigin="anonymous"></video>
             <video id="cameraRecording" width="300" style="display: none;"></video>
 
             <div class="edit-form-svg">

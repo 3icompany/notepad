@@ -37,6 +37,19 @@
 .container-fluid {
     margin: 0 !important;
     padding: 0 !important;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+body.notepad-on {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 #listOfSymbol {
@@ -267,7 +280,9 @@ img {
 #menu-top {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    /* height: 100vh;
+    max-height: -webkit-fill-available; */
+    height: 100%;
     background: #232222;
     position: relative;
 }
@@ -546,6 +561,10 @@ f .actions-r .r-mode .mode-on {}
     margin-right: auto;
     width: 100%;
 }
+
+#meetingSDKChatElement {
+    
+}
 #suspension-view-tabpanel-gallery {
 
 }
@@ -647,6 +666,18 @@ f .actions-r .r-mode .mode-on {}
 
 .block-toolbar {
     display: flex;
+    overflow: hidden;
+}
+
+#toolbar-expand-btn {
+    color: #eee;
+    font-size: 20px;
+    padding-bottom: 6px 10px !important;
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.3;
 }
 
 
@@ -2661,6 +2692,10 @@ textarea {
 100% { transform: rotate(360deg); }
 }
 
+.modal-content {
+    max-width: 400px;
+}
+
 
 /* Responsive */
 /* mobile with < 740px */
@@ -2703,7 +2738,7 @@ textarea {
     }
 
     .menu-tray.show-both.has-submenutool {
-        height: 40%;
+        /* height: 40%; */
     }
 
     /* .meeting-client-inner.minishow.main-layout.active-main.active-avatar.img{
@@ -2750,11 +2785,22 @@ textarea {
         background-color: #fefefe;
         margin: 4% auto 15% auto;
         border: 1px solid #888;
-        width: 50%;
+        width: 80%;
         padding-bottom: 30px;
-        height: 30%;
+        height: 80%;
     }
 
+    .wrap-sidebar-left {
+        width: 80%;
+    }
+
+    .block-toolbar {
+        height: 40px;
+    }
+
+    div#zoom-list {
+        left: 10% !important;
+    }
 }
 
 /* Tablet width >= 740px and width < 1024px  */
@@ -2763,6 +2809,10 @@ textarea {
     #create_room {
         top: 15%;
         width: 50%;
+    }
+
+    .block-toolbar {
+        height: 40px;
     }
 
     .style-popup-layer,
