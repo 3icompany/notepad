@@ -323,30 +323,30 @@
                 
                 <div id="create_room" class="modal-content animate hidden" style="top: 20%; height: fit-content;">
                   <div id="room-btn-container">
-                    <p style="padding: 20px;font-size: medium;text-align: center;">Select room</p>
+                    <p class="text-title" style="padding: 20px;font-size: medium;text-align: center;">Select room</p>
                     <div class="" style="margin: 0 30px;">
-                      <select name="room" id="room" class="rounded"  style="padding: 8px 16px; margin: 12px 0px; width: 100%;" ></select>
+                      <select name="room" id="room" class="rounded room-bg"  style="padding: 8px 16px; margin: 12px 0px; width: 100%; color: #fff;" ></select>
                       <div class="" style="display: flex;justify-content: flex-end;margin-top: 20px;">
                         <div>
-                          <button class="rounded" id="btn_create_room" style="padding: 10px;margin-right: 16px;">Create room</button>
-                          <button class="rounded" id="btn_join_room"  style="padding: 10px;">Join room</button>
+                          <button class="btn btn-success rounded room-bg text-title" id="btn_join_room" style="padding: 10px;margin-right: 16px; border: #000;">join</button>
+                          <button class="btn btn-warning rounded room-bg text-title" id="btn_create_room" style="padding: 10px; border: #000;">Create</button>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div id="join-room-animation" class="hidden">
-                    <p style="display: inline; margin-right: 20px;">Waiting for host to accept your requirement</p>
+                    <p style="display: inline; margin-right: 20px; color: #fff;">Waiting for host to accept your requirement</p>
                     <div class="loader"></div>
                   </div>
                 </div>
                 
                 <div id="create_room_modal" class="modal-content animate hidden" style="top: 20%; height: fit-content;">
-                  <p style="padding: 20px;font-size: medium;text-align: center;">Enter your room name</p>
+                  <p class="text-title" style="padding: 20px;font-size: medium;text-align: center;">Enter your room name</p>
                   <div style="padding: 12px 32px;">
-                    <input name="room-name" placeholder="Your room name..." id="room-name" class="rounded" style="padding: 10px 16px; width: 100%;" ></input>
+                    <input name="room-name" id="room-name" class="rounded room-bg" style="padding: 10px 16px; width: 100%; color: #fff;" ></input>
                     <div class="" style="display: flex;justify-content: flex-end;margin-top: 20px;">
-                      <button class="rounded" id="room-create" style="padding: 10px;margin-right: 16px;">Create room</button>
-                      <button class="rounded" id="room-create-cancel" style="padding: 10px;">Cancel</button>
+                      <button class="btn btn-success rounded text-title room-bg" id="room-create" style="border: #000; padding: 10px;margin-right: 16px;">create</button>
+                      <button class="btn btn-danger rounded text-title room-bg" id="room-create-cancel" style="border: #000; padding: 10px;">Cancel</button>
                     </div>
                   </div>
                 </div>
