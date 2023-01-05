@@ -2,10 +2,10 @@ var backgroundColorCanvas = "";
 window.addEventListener('DOMContentLoaded', (event) => {
   (function ($, window, document, undefined) {
     "use strict";
-    var url = "https://nodejs.3i.com.vn"; //Use when run on publish
+    // var url = "https://nodejs.3i.com.vn"; //Use when run on publish
     // var nodeServer = 'http://127.0.0.1:3000'; //Use when run on local
     // var url = 'http://localhost:3001';
-    // var url = 'http://localhost:3000';
+    var url = 'http://localhost:3000';
     var plugin_url = "https://notepad.s-work.vn/v3/"; //
     var stanza = 999999;
     var lengthObject = 0;
@@ -1658,14 +1658,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
     $("#toolbar-expand-btn").click(function () {
       isShowToolbar = !isShowToolbar;
       if(isShowToolbar) {
-        $(".block-toolbar").css({ height: "fit-content" });
-        // $('.block-toolbar').slideDown()
+        $(".block-tool-btn").css({ height: "fit-content" });
+        // $('.block-tool-btn').slideDown()
         $("#toolbar-expand-btn").html(
           '<i class="fa fa-angle-double-down" aria-hidden="true">'
         );
       } else {
-        $(".block-toolbar").css({ height: "40px" });
-        // $('.block-toolbar').slideUp()
+        $(".block-tool-btn").css({ height: "40px" });
+        // $('.block-tool-btn').slideUp()
         $("#toolbar-expand-btn").html(
           '<i class="fa fa-bars" aria-hidden="true"></i>'
         );
@@ -3036,7 +3036,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
         if($this.hasClass("active")) {
           $this.removeClass("active");
-          $this.next(".tool-submenu").addClass("hidden");
+          // $this.parent(".tool-submenu").addClass("hidden");
+          $(`.tool-submenu.${$this.data('name')}-class`).addClass("hidden");
 
           tray_menu.removeClass("has-submenutool");
           sidemenu.removeClass("has-submenutool");
@@ -3045,7 +3046,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
           $task_wrap.find(".tool-submenu").addClass("hidden");
 
           $this.addClass("active");
-          $this.next(".tool-submenu").removeClass("hidden");
+          // $this.next(".tool-submenu").removeClass("hidden");
+          $(`.tool-submenu.${$this.data('name')}-class`).removeClass("hidden");
 
           tray_menu.addClass("has-submenutool");
           sidemenu.addClass("has-submenutool");
