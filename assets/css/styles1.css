@@ -666,7 +666,7 @@ f .actions-r .r-mode .mode-on {}
 
 .block-toolbar {
     display: flex;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 #toolbar-expand-btn {
@@ -1002,21 +1002,6 @@ f .actions-r .r-mode .mode-on {}
     /*margin-top: 13px;*/
 }
 
-.style-popup-layer {
-    height: 40px;
-    position: fixed;
-    top: 80px;
-    /* left: 5%; */
-    /*padding: 5px 15px;*/
-    width: 100%;
-    /*border: 1px solid #909090;*/
-    background: #232222;
-    z-index: 1;
-    /* box-shadow: 1px 1px 1px #909090;dow: 1px 1px 1px #909090;
-            */
-    left: 0;
-}
-
 .border-bottom {
     /*border-bottom: 1px solid #909090;*/
     /*padding-bottom: 13px;*/
@@ -1033,12 +1018,9 @@ f .actions-r .r-mode .mode-on {}
     position: relative;
 }
 
-.style-popup-color,
-.style-popup-pencil,
-.style-popup-eraser,
-.style-popup-grid {
+.tool-submenu {
     position: fixed;
-    top: 80px;
+    /* top: 80px; */
     /*left: 16%;*/
     /*padding: 5px 10px;*/
     height: 40px;
@@ -2773,11 +2755,11 @@ textarea {
     .style-popup-pencil,
     .style-popup-eraser,
     .style-popup-grid {
-        margin-top: -40px;
+        /* margin-top: -40px; */
     }
 
     .style-popup-layer {
-        top: 2% !important;
+        /* top: 2% !important; */
     }
 
     /* Form login */
@@ -2795,7 +2777,7 @@ textarea {
     }
 
     .block-toolbar {
-        height: 40px;
+        /* height: 40px; */
     }
 
     div#zoom-list {
@@ -2826,16 +2808,12 @@ textarea {
         width: 50%;
     }
 
-    .block-toolbar {
+    .block-tool-btn {
         height: 40px;
     }
 
-    .style-popup-layer,
-    .style-popup-color,
-    .style-popup-pencil,
-    .style-popup-eraser,
-    .style-popup-grid {
-        top: 120px;
+    .tool-submenu {
+        /* top: 120px; */
     }
 
     .style-popup-symbol {
