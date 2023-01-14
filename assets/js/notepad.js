@@ -2,10 +2,10 @@ var backgroundColorCanvas = "";
 window.addEventListener('DOMContentLoaded', (event) => {
   (function ($, window, document, undefined) {
     "use strict";
-    // var url = "https://nodejs.3i.com.vn"; //Use when run on publish
+    var url = "https://nodejs.3i.com.vn"; //Use when run on publish
     // var nodeServer = 'http://127.0.0.1:3000'; //Use when run on local
     // var url = 'http://localhost:3001';
-    var url = 'http://localhost:3000';
+    // var url = 'http://localhost:3000';
     var plugin_url = "https://notepad.s-work.vn/v3/"; //
     var stanza = 999999;
     var lengthObject = 0;
@@ -15,6 +15,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     var positiony = "0";
     var lastEmit = $.now();
     var touchX, touchY;
+    var isGroup = false;
     var mousedown = false;
     var shift = false;
     var divrubber = $("#divrubber");
@@ -95,6 +96,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
     // this for draw line with special type
     let isDrawLine = false;
     let isDrawingLine = false;
+    let drawLineTimeId = null;
+    let drawingLineTimeId = null;
     let drawLine;
     let isDown;
     let lineType = "";
@@ -456,6 +459,27 @@ window.addEventListener('DOMContentLoaded', (event) => {
       } else {
         hidePopupMenu();
       }
+    }
+
+    function detectMob() {
+      const toMatch = [
+        /Android/i,
+        /webOS/i,
+        /iPhone/i,
+        /iPad/i,
+        /iPod/i,
+        /BlackBerry/i,
+        /Windows Phone/i
+      ];
+
+      return toMatch.some((toMatchItem) => {
+        return navigator.userAgent.match(toMatchItem);
+      });
+    }
+
+    if(detectMob()) {
+      // alert("Mobile / Tablet version");
+      $("#curve-line").addClass("hidden");
     }
 
     function touchPopupMenu(position, callback) {
@@ -922,6 +946,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 var quizType = $("#quiz-type").val();
                 if(obj.isDrag === true || obj.isDrop === true) {
                   countItem++;
+                }
+                if(obj?.name === "line-style") {
+                  obj.set({
+                    selectable: true,
+                    hasBorders: true,
+                    hasRotatingPoint: true,
+                    hasBorders: true,
+                    transparentCorners: false,
+                  });
+                  obj.setControlsVisibility({
+                    tl: true,
+                    tr: true,
+                    bl: true,
+                    br: true,
+                    mtr: true,
+                    mb: true,
+                    mt: true,
+                    ml: true,
+                    mr: true,
+                  });
                 }
 
                 if(obj.name == "lineConnect") {
@@ -3590,8 +3634,22 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
       });
 
+      var showPw = false
+      $("#show-pw").on("click", function () {
+        showPw = !showPw;
+        if(showPw) {
+          $("#pass")[0].type = "text";
+          $("#show-pw").html(`<i class="fa fa-eye" aria-hidden="true"></i>`);
+        }
+        else {
+          $("#pass")[0].type = "password";
+          $("#show-pw").html(`<i class="fa fa-eye-slash" aria-hidden="true"></i>`);
+        }
+      });
+
       //vuong
-      $("#btn_login").on("click", function () {
+      $("#login-form").on("submit", function (e) {
+        e.preventDefault();
         if($("#username")[0].value != "" && $("#pass")[0].value != "") {
           // $('#modal-wrapper').css({ 'display': 'none' });
 
@@ -3676,7 +3734,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 alert("Login failed");
               }
             })
-            .catch((error) => console.log("error", error));
+            .catch((error) => {
+              alert("Login failed!");
+              console.log("error", error);
+            });
           // check login from dieuhanh.vatco.vn
           // login()
           // login success, call emit, on, jquery
@@ -4019,7 +4080,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         const ext = ["pdf, doc, xlsx"];
         for(let i = 0;i < e.target.files.length;i++) {
           const file = e.target.files[i];
-          if (!ext.some(s => file.name.includes(s))) {
+          if(!ext.some(s => file.name.includes(s))) {
             alert("Invalid file's type!");
             continue;
           }
@@ -4619,8 +4680,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
       }
 
-      // group active objects
-      $("#icon-group").click(function () {
+      function handleGroup() {
         if(!canvas.getActiveObject()) {
           return;
         }
@@ -4684,7 +4744,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
         // startActiveObject(group);
         canvas.requestRenderAll();
         $("#moveObject")[0].click();
+
+      }
+
+      // group active objects
+      $("#icon-group").click(function () {
+        if(isGroup) {
+          handleGroup()
+        }
+        isGroup = !isGroup;
       });
+
       canvas.on("mouse:down", function (opts) {
         if($(".tool-btn.active").length > 0) {
           // if ()
@@ -5060,6 +5130,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
         var $url = $this.parents(".video-popup-class").find(".video-url").val();
         var cnt = getCanvas();
 
+        var xhr = new XMLHttpRequest();
+
+        xhr.open('GET', 'page.html');
+        xhr.onreadystatechange = handler;
+        xhr.responseType = 'blob';
+        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+        xhr.send();
+
+        function handler() {
+          if(this.readyState === this.DONE) {
+            if(this.status === 200) {
+              // this.response is a Blob, because we set responseType above
+              var data_url = URL.createObjectURL(this.response);
+              document.querySelector('#output-frame-id').src = data_url;
+            } else {
+              console.error('no pdf :(');
+            }
+          }
+        }
+
         $("#yotubeVideo .item-video").addClass("hidden");
         $(".video-popup-class").addClass("hidden");
 
@@ -5268,26 +5358,72 @@ window.addEventListener('DOMContentLoaded', (event) => {
         console.log(`  ~ loadLayerCanvasJsonNew`, 5);
       });
 
+      var updateAtributes = [
+        'top',
+        'left',
+        'text',
+        'width',
+        'height',
+        'textAlign',
+        'fontSize',
+        'fill',
+        'stroke',
+        'strokeWidth',
+        'hasControls',
+        'lockMovementX',
+        'lockMovementY',
+        'fontWeight',
+        'fontStyle',
+        'underline',
+        'angle',
+        'scaleX',
+        'scaleY',
+        'skewX',
+        'skewY',
+        'flipX',
+        'originX',
+        'flipY',
+        'originY',
+        'fillRule',
+
+      ].concat(customAttributes)
+
       socket.on("updated", function (data) {
+        console.log("updated event", { data });
         if(data.isUpdateMedia) {
           listMedia = data.listMedia;
         } else {
           canvas.getObjects().forEach((item) => {
             if(item.objectID == data.objectID) {
-              console.log("updated", { data }, { item });
-              item.set({
-                ...data.dataChange,
-              });
+              // console.log("updated", { data });
+              updateAtributes.forEach(a => {
+                if (a === "fill" && data.dataChange[a] === "rgb(0,0,0)") {
+                  return;
+                }
+                if(data.dataChange[a]) {
+                  item[a] = data.dataChange[a]
+                }
+              })
               if(data.dataChange.objects) {
                 item._objects.forEach((o, index) => {
                   const object = data.dataChange.objects[index]
-                  o.set({
-                    ...object
-                  });
+                  updateAtributes.forEach(a => {
+                    if (a === "fill" && data.dataChange[a] === "rgb(0,0,0)") {
+                      return;
+                    }
+                    if(object && object[a]) {
+                      o[a] = object[a]
+                    }
+                  })
                   if(o.type === "group") {
                     o._objects.forEach((obj, i) => {
-                      obj.set({
-                        ...object.objects[i]
+                      updateAtributes.forEach(a => {
+                        if (a === "fill" && data.dataChange[a] === "rgb(0,0,0)") {
+                          return;
+                        }
+                        if(object?.objects[a]) {
+                          obj[a] = object.objects[a]
+                        }
                       })
                     })
                   }
@@ -5325,7 +5461,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
           updateObjectByID(pool_data, data.dataChange, data.objectID, true);
         }
-        canvas.requestRenderAll();
+        canvas.renderAll();
       });
 
       socket.on("deleteObject", function (data) {
@@ -7716,40 +7852,40 @@ window.addEventListener('DOMContentLoaded', (event) => {
         snap: true,
       });
 
-      // item.on('mousedblclick', function() {
-      //     activeObject = this;
+      item.on('mousedblclick', function() {
+          activeObject = this;
 
-      //     const editForm = $('#edit-form')[ 0 ];
+          const editForm = $('#edit-form')[ 0 ];
 
-      //     if(editForm.style.visibility === 'hidden') {
-      //         $('#soundSelected')[ 0 ].nextElementSibling.innerText = this.nameSoundSelected;
-      //         $('#soundUnselected')[ 0 ].nextElementSibling.innerText = this.nameSoundUnselected;
-      //         $('#soundTyping')[ 0 ].nextElementSibling.innerText = this.nameSoundTyping;
-      //         $('#soundSnap')[ 0 ].nextElementSibling.innerText = this.nameSoundSnap;
+          if(editForm.style.visibility === 'hidden') {
+              $('#soundSelected')[ 0 ].nextElementSibling.innerText = this.nameSoundSelected;
+              $('#soundUnselected')[ 0 ].nextElementSibling.innerText = this.nameSoundUnselected;
+              $('#soundTyping')[ 0 ].nextElementSibling.innerText = this.nameSoundTyping;
+              $('#soundSnap')[ 0 ].nextElementSibling.innerText = this.nameSoundSnap;
 
-      //         $('#objSelect')[ 0 ].checked = this.select;
-      //         $('#objInput')[ 0 ].checked = this.input;
-      //         $('#objSnap')[ 0 ].checked = this.snap;
-      //         $('#objControl')[ 0 ].checked = this.hasControls;
-      //         $('#textColor')[ 0 ].value = this.colorText;
-      //         $('#borderColor')[ 0 ].value = this.colorBorder;
-      //         $('#borderWidth')[ 0 ].value = this.widthBorder;
-      //         $('#objCurve')[ 0 ].value = this.curve;
-      //         $('#objAngle')[ 0 ].value = this.angle;
-      //         $('#objBring')[ 0 ].value = this.position;
-      //         $('#objShadow')[ 0 ].innerText = this.hasShadow ? 'On' : 'Off';
-      //         $('#objFixed')[ 0 ].innerText = this.lockMovementX ? 'On' : 'Off';
+              $('#objSelect')[ 0 ].checked = this.select;
+              $('#objInput')[ 0 ].checked = this.input;
+              $('#objSnap')[ 0 ].checked = this.snap;
+              $('#objControl')[ 0 ].checked = this.hasControls;
+              $('#textColor')[ 0 ].value = this.colorText;
+              $('#borderColor')[ 0 ].value = this.colorBorder;
+              $('#borderWidth')[ 0 ].value = this.widthBorder;
+              $('#objCurve')[ 0 ].value = this.curve;
+              $('#objAngle')[ 0 ].value = this.angle;
+              $('#objBring')[ 0 ].value = this.position;
+              $('#objShadow')[ 0 ].innerText = this.hasShadow ? 'On' : 'Off';
+              $('#objFixed')[ 0 ].innerText = this.lockMovementX ? 'On' : 'Off';
 
-      //         const zoom = canvas.getZoom();
-      //         const top = (this.top) * zoom + canvas.viewportTransform[ 5 ] - 60;
-      //         const left = (this.left + (this.width / 2) * this.scaleX) * zoom + canvas.viewportTransform[ 4 ] - 180;
+              const zoom = canvas.getZoom();
+              const top = (this.top) * zoom + canvas.viewportTransform[ 5 ] - 60;
+              const left = (this.left + (this.width / 2) * this.scaleX) * zoom + canvas.viewportTransform[ 4 ] - 180;
 
-      //         $('#edit-form').css({ 'visibility': 'visible', 'top': top + 'px', 'left': left + 'px' });
-      //     }
-      //     else {
-      //         hidePopupMenu();
-      //     }
-      // });
+              $('#edit-form').css({ 'visibility': 'visible', 'top': top + 'px', 'left': left + 'px' });
+          }
+          else {
+              hidePopupMenu();
+          }
+      });
       item.on("mouseup", function () {
         console.log("mouseup");
         // console.log(item);
@@ -11117,10 +11253,22 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     canvas.on("object:modified", function (e) {
       e.target.clicked = false;
+      if(e.target) {
+        updateLocal(
+          pool_data,
+          e.target.objectID,
+          {
+            left: e.target.left,
+            top: e.target.top,
+          },
+          socket,
+          true
+        );
+      }
     });
 
     canvas.on("mouse:over", function (obj) {
-      if(!isErasing && !isSelecting) {
+      if(!isErasing && !isSelecting && !isDrawLine) {
         if(obj.target && !obj.target.isBackground) {
           // if (obj.target.name != 'curve-point' &&
           //     // obj.target.name != 'lineConnect' &&
@@ -11395,7 +11543,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
         !isRotating &&
         !options.target &&
         !isSelecting &&
-        !isDrawLine
+        !isDrawLine &&
+        !isGroup
       ) {
         const x = options.pointer.x - init_position[0];
         const y = options.pointer.y - init_position[1];
@@ -11639,7 +11788,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
           $("#lines").click();
         }
-        if(lineType == "curve") {
+        else if(lineType == "curve") {
           const pointer = canvas.getPointer(options.e);
 
           drawLine = new fabric.Path("M 0 0 Q 100 100 200 0", {
@@ -11667,9 +11816,34 @@ window.addEventListener('DOMContentLoaded', (event) => {
           canvas.add(drawLine);
           canvas.renderAll();
         }
+
+        var time = 500;
+
+        if(lineType === "dot") {
+          time = 1000;
+        }
+        drawLineTimeId = setTimeout(() => {
+          onDrawLineDblClick()
+        }, time);
       }
 
       function onDrawLineMouseDown(options) {
+        // fake double click event for ipad,...
+        if(isDrawingLine) {
+          onDrawLineDblClick();
+          isDrawingLine = false;
+        } else {
+          isDrawingLine = true;
+          drawingLineTimeId = setTimeout(() => {
+            isDrawingLine = false;
+          }, 500);
+        }
+
+        if(drawLineTimeId) {
+          clearTimeout(drawLineTimeId);
+          drawLineTimeId = null;
+        }
+
         isDown = true;
         const pointer = canvas.getPointer(options.e);
         const points = [pointer.x, pointer.y, pointer.x, pointer.y];
@@ -11792,6 +11966,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
       }
 
       function onDrawLineDblClick() {
+        if(drawingLineTimeId) {
+          clearTimeout(drawingLineTimeId);
+          drawingLineTimeId = null;
+        }
+
+        if(drawLineTimeId) {
+          clearTimeout(drawLineTimeId);
+          drawLineTimeId = null;
+        }
+
         if(
           lineType == "multiple" ||
           lineType == "dash" ||
@@ -11851,6 +12035,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
       }
 
       function onDrawLineMouseMove(o) {
+        if(drawLineTimeId) {
+          clearTimeout(drawLineTimeId);
+          drawLineTimeId = null;
+        }
+
         if(!isDown) return;
         var pointer = canvas.getPointer(o.e);
         if(drawLine && lineType == "curve") {
@@ -12338,6 +12527,275 @@ window.addEventListener('DOMContentLoaded', (event) => {
         createAnswerTextBox(rect);
       }
 
+      function loadQuiz(data) {
+        questions = data.questions;
+        correctAnswers = data.correctAnswers;
+        quizSetting = data.setting;
+
+        isCreateQuiz = true;
+        isCreateAnswer = true;
+
+        var quizType = data.gameType;
+        $("#quiz-type").val(data.gameType).change();
+        // var quizTypeCurrent = $("#quiz-type").val();
+        // if(quizType != quizTypeCurrent) {
+        //   alert("Invalid Quiz game type!");
+        // }
+
+        const canvasObj = JSON.parse(data.canvas);
+
+        if(quizType == "quiz-1") {
+          const tableObjs = [];
+          const tableObj = canvasObj.objects[0];
+
+          if(data.canvas && data.questions && data.correctAnswers) {
+            fabric.util.enlivenObjects(
+              tableObj.objects,
+              function (enlivenedObjects) {
+                enlivenedObjects.forEach(function (obj) {
+                  if(obj.name == "quiz-selectObj") {
+                    startActiveObject(obj);
+                    obj.set({
+                      fixed: true,
+                      soundSelected: quizSetting.selectSound,
+                      soundUnselected: quizSetting.selectSound,
+                    });
+
+                    tableObjs.push(obj);
+                  } else if(obj.name == "quiz-index") {
+                    tableObjs.push(obj);
+                  }
+                });
+              }
+            );
+
+            const title = new fabric.Text("Answer Correct", {
+              top: 0,
+              left: 30,
+              fontSize: 16,
+              fontFamily: "Times New Roman",
+            });
+
+            const text = correctAnswers.map((item) => item.value).join(" ");
+
+            correctAnswerBox = new fabric.Textbox(text, {
+              left: 0,
+              top: 40,
+              width: 200,
+              fontSize: 10,
+              fontFamily: "Times New Roman",
+              id: "answer-correct-textbox",
+            });
+
+            const group = new fabric.Group([title, correctAnswerBox], {
+              top: 50,
+              left: 50,
+              selectable: false,
+            });
+
+            canvas.add(group);
+
+            table = createTable(tableObjs);
+            canvas.add(table);
+
+            canvas.renderAll();
+          } else {
+            alert("Invalid Quiz file input!");
+          }
+        } else if(quizType == "quiz-2") {
+          if(data.canvas && data.questions && data.correctAnswers) {
+            fabric.util.enlivenObjects(
+              canvasObj.objects,
+              function (enlivenedObjects) {
+                enlivenedObjects.forEach(function (obj) {
+                  if(obj.name == "quiz-inputObj") {
+                    startActiveObject(obj);
+                    obj.set({
+                      fixed: true,
+                    });
+
+                    canvas.add(obj);
+                  }
+                });
+              }
+            );
+
+            const title = new fabric.Text("Answer Correct", {
+              top: 0,
+              left: 30,
+              fontSize: 16,
+              fontFamily: "Times New Roman",
+            });
+
+            const text = correctAnswers
+              .map((item) => `${item.id} - ${item.value}`)
+              .join(", ");
+
+            correctAnswerBox = new fabric.Textbox(text, {
+              left: 0,
+              top: 40,
+              width: 200,
+              fontSize: 10,
+              fontFamily: "Times New Roman",
+              id: "answer-correct-textbox",
+            });
+
+            const group = new fabric.Group([title, correctAnswerBox], {
+              top: 50,
+              left: 50,
+              selectable: false,
+            });
+
+            canvas.add(group);
+
+            table = createTable([]);
+            canvas.add(table);
+
+            canvas.renderAll();
+          } else {
+            alert("Invalid Quiz file input!");
+          }
+        } else if(quizType == "quiz-3") {
+          if(
+            data.canvas &&
+            data.startingCanvas &&
+            data.questions &&
+            data.correctAnswers
+          ) {
+            fabric.util.enlivenObjects(
+              canvasObj.objects,
+              function (enlivenedObjects) {
+                enlivenedObjects.forEach(function (obj) {
+                  console.log("obj", obj);
+                  var quizType = $("#quiz-type").val();
+                  if(obj.isDrag === true || obj.isDrop === true) {
+                    countItem++;
+                  }
+                  if(obj.type === "group") {
+                    if(obj._objects.length > 0) {
+                      function createQuizTextBox(
+                        obj,
+                        isAnswerCorrect,
+                        isUserResult
+                      ) {
+                        if(isAnswerCorrect) {
+                          obj._objects.forEach((child) => {
+                            if(child.id == "answer-correct-textbox") {
+                              correctAnswerBox = child;
+                              if(quizType == "quiz-3") {
+                                console.log(correctAnswerBox);
+                                correctAnswerMatch =
+                                  correctAnswerBox.text.split(", ");
+                              }
+                            }
+                          });
+                        }
+                        if(isUserResult) {
+                          obj._objects.forEach((child) => {
+                            if(child.id == "answer-correct-textbox") {
+                              userAnswerBox = child;
+                              if(quizType == "quiz-3") {
+                                console.log(correctAnswerBox);
+                                userResult = userAnswerBox.text.split(", ");
+                              }
+                            }
+                          });
+                        }
+                      }
+                      obj._objects.forEach((child) => {
+                        if(child.text == "Answer Correct") {
+                          createQuizTextBox(obj, true, false);
+                        }
+                        if(child.text == "User Answer") {
+                          createQuizTextBox(obj, false, true);
+                        }
+                      });
+                    }
+                    startActiveObject(obj);
+                    canvas.add(obj);
+                  } else if(obj.type === "image") {
+                    fabric.Image.fromURL(obj.src, function (img) {
+                      img.set({
+                        top: obj.top,
+                        left: obj.left,
+                        width: obj.width,
+                        height: obj.height,
+                        scaleX: obj.scaleX,
+                        scaleY: obj.scaleY,
+                      });
+                      if(quizType == "quiz-3") {
+                        img.set({
+                          name: obj.name,
+                          id: obj.id,
+                          port1: obj.port1,
+                          port2: obj.port2,
+                          idObject1: obj.idObject1,
+                          idObject2: obj.idObject2,
+                          objectID: obj.objectID,
+                          port: obj.port,
+                          lineID: obj.lineID,
+                          hasShadow: obj.hasShadow,
+                          shadowObj: obj.shadowObj,
+                          pos: obj.pos,
+                          snap: obj.snap,
+                          readySound: obj.readySound,
+                          sound: obj.sound,
+                          line2: obj.line2,
+                          isDrop: obj.isDrop,
+                          isDrag: obj.isDrag,
+                          isBackground: obj.isBackground,
+                          answerId: obj.answerId,
+                        });
+                      }
+
+                      startActiveObject(img);
+
+                      canvas.add(img);
+                    });
+                  } else {
+                    obj.hasBorders = obj.hasControls = false;
+
+                    if(obj.name === "curve-point") {
+                      obj.on("moving", function () {
+                        const line = canvas
+                          .getObjects()
+                          .find(
+                            (item) =>
+                              item.type === "path" &&
+                              item.objectID === obj.lineID
+                          );
+
+                        if(line) {
+                          line.path[1][1] = obj.left;
+                          line.path[1][2] = obj.top;
+                        }
+                      });
+                    } else if(obj.type === "path") {
+                      obj._setPath(obj.path);
+                      obj.selectable = false;
+                    }
+                    canvas.add(obj);
+                  }
+                });
+              }
+            );
+
+            matchQuizData = {
+              canvas: data.startingCanvas,
+              title: "",
+              gameType: quizType,
+            };
+
+            isCreateQuiz = true;
+            isCreateAnswer = true;
+
+            canvas.renderAll();
+          } else {
+            alert("Invalid Quiz file input!");
+          }
+        }
+      }
+
       // load quiz - Kiet edit
       quizInputFile.onchange = function (e) {
         $("#quizs-body li:nth-child(n+4):nth-child(-n+5)").css({
@@ -12352,279 +12810,23 @@ window.addEventListener('DOMContentLoaded', (event) => {
         let reader = new FileReader();
 
         reader.onload = function (e) {
+          $(".btn-eraser-clear")[0].click();
+          $("#change-eraser")[0].click();
+          $("#reset")[0].click();
+
           const data = JSON.parse(e.target.result);
-          canvas.clear();
 
-          questions = data.questions;
-          correctAnswers = data.correctAnswers;
-          quizSetting = data.setting;
-
-          isCreateQuiz = true;
-          isCreateAnswer = true;
-
-          var quizType = data.gameType;
-          var quizTypeCurrent = $("#quiz-type").val();
-          if(quizType != quizTypeCurrent) {
-            alert("Invalid Quiz game type!");
-          }
-
-          const canvasObj = JSON.parse(data.canvas);
-
-          if(quizType == "quiz-1") {
-            const tableObjs = [];
-            const tableObj = canvasObj.objects[0];
-
-            if(data.canvas && data.questions && data.correctAnswers) {
-              fabric.util.enlivenObjects(
-                tableObj.objects,
-                function (enlivenedObjects) {
-                  enlivenedObjects.forEach(function (obj) {
-                    if(obj.name == "quiz-selectObj") {
-                      startActiveObject(obj);
-                      obj.set({
-                        fixed: true,
-                        soundSelected: quizSetting.selectSound,
-                        soundUnselected: quizSetting.selectSound,
-                      });
-
-                      tableObjs.push(obj);
-                    } else if(obj.name == "quiz-index") {
-                      tableObjs.push(obj);
-                    }
-                  });
-                }
-              );
-
-              const title = new fabric.Text("Answer Correct", {
-                top: 0,
-                left: 30,
-                fontSize: 16,
-                fontFamily: "Times New Roman",
-              });
-
-              const text = correctAnswers.map((item) => item.value).join(" ");
-
-              correctAnswerBox = new fabric.Textbox(text, {
-                left: 0,
-                top: 40,
-                width: 200,
-                fontSize: 10,
-                fontFamily: "Times New Roman",
-                id: "answer-correct-textbox",
-              });
-
-              const group = new fabric.Group([title, correctAnswerBox], {
-                top: 50,
-                left: 50,
-                selectable: false,
-              });
-
-              canvas.add(group);
-
-              table = createTable(tableObjs);
-              canvas.add(table);
-
-              canvas.renderAll();
-            } else {
-              alert("Invalid Quiz file input!");
-            }
-          } else if(quizType == "quiz-2") {
-            if(data.canvas && data.questions && data.correctAnswers) {
-              fabric.util.enlivenObjects(
-                canvasObj.objects,
-                function (enlivenedObjects) {
-                  enlivenedObjects.forEach(function (obj) {
-                    if(obj.name == "quiz-inputObj") {
-                      startActiveObject(obj);
-                      obj.set({
-                        fixed: true,
-                      });
-
-                      canvas.add(obj);
-                    }
-                  });
-                }
-              );
-
-              const title = new fabric.Text("Answer Correct", {
-                top: 0,
-                left: 30,
-                fontSize: 16,
-                fontFamily: "Times New Roman",
-              });
-
-              const text = correctAnswers
-                .map((item) => `${item.id} - ${item.value}`)
-                .join(", ");
-
-              correctAnswerBox = new fabric.Textbox(text, {
-                left: 0,
-                top: 40,
-                width: 200,
-                fontSize: 10,
-                fontFamily: "Times New Roman",
-                id: "answer-correct-textbox",
-              });
-
-              const group = new fabric.Group([title, correctAnswerBox], {
-                top: 50,
-                left: 50,
-                selectable: false,
-              });
-
-              canvas.add(group);
-
-              table = createTable([]);
-              canvas.add(table);
-
-              canvas.renderAll();
-            } else {
-              alert("Invalid Quiz file input!");
-            }
-          } else if(quizType == "quiz-3") {
-            if(
-              data.canvas &&
-              data.startingCanvas &&
-              data.questions &&
-              data.correctAnswers
-            ) {
-              fabric.util.enlivenObjects(
-                canvasObj.objects,
-                function (enlivenedObjects) {
-                  enlivenedObjects.forEach(function (obj) {
-                    console.log("obj", obj);
-                    var quizType = $("#quiz-type").val();
-                    if(obj.isDrag === true || obj.isDrop === true) {
-                      countItem++;
-                    }
-                    if(obj.type === "group") {
-                      if(obj._objects.length > 0) {
-                        function createQuizTextBox(
-                          obj,
-                          isAnswerCorrect,
-                          isUserResult
-                        ) {
-                          if(isAnswerCorrect) {
-                            obj._objects.forEach((child) => {
-                              if(child.id == "answer-correct-textbox") {
-                                correctAnswerBox = child;
-                                if(quizType == "quiz-3") {
-                                  console.log(correctAnswerBox);
-                                  correctAnswerMatch =
-                                    correctAnswerBox.text.split(", ");
-                                }
-                              }
-                            });
-                          }
-                          if(isUserResult) {
-                            obj._objects.forEach((child) => {
-                              if(child.id == "answer-correct-textbox") {
-                                userAnswerBox = child;
-                                if(quizType == "quiz-3") {
-                                  console.log(correctAnswerBox);
-                                  userResult = userAnswerBox.text.split(", ");
-                                }
-                              }
-                            });
-                          }
-                        }
-                        obj._objects.forEach((child) => {
-                          if(child.text == "Answer Correct") {
-                            createQuizTextBox(obj, true, false);
-                          }
-                          if(child.text == "User Answer") {
-                            createQuizTextBox(obj, false, true);
-                          }
-                        });
-                      }
-                      startActiveObject(obj);
-                      canvas.add(obj);
-                    } else if(obj.type === "image") {
-                      fabric.Image.fromURL(obj.src, function (img) {
-                        img.set({
-                          top: obj.top,
-                          left: obj.left,
-                          width: obj.width,
-                          height: obj.height,
-                          scaleX: obj.scaleX,
-                          scaleY: obj.scaleY,
-                        });
-                        if(quizType == "quiz-3") {
-                          img.set({
-                            name: obj.name,
-                            id: obj.id,
-                            port1: obj.port1,
-                            port2: obj.port2,
-                            idObject1: obj.idObject1,
-                            idObject2: obj.idObject2,
-                            objectID: obj.objectID,
-                            port: obj.port,
-                            lineID: obj.lineID,
-                            hasShadow: obj.hasShadow,
-                            shadowObj: obj.shadowObj,
-                            pos: obj.pos,
-                            snap: obj.snap,
-                            readySound: obj.readySound,
-                            sound: obj.sound,
-                            line2: obj.line2,
-                            isDrop: obj.isDrop,
-                            isDrag: obj.isDrag,
-                            isBackground: obj.isBackground,
-                            answerId: obj.answerId,
-                          });
-                        }
-
-                        startActiveObject(img);
-
-                        canvas.add(img);
-                      });
-                    } else {
-                      obj.hasBorders = obj.hasControls = false;
-
-                      if(obj.name === "curve-point") {
-                        obj.on("moving", function () {
-                          const line = canvas
-                            .getObjects()
-                            .find(
-                              (item) =>
-                                item.type === "path" &&
-                                item.objectID === obj.lineID
-                            );
-
-                          if(line) {
-                            line.path[1][1] = obj.left;
-                            line.path[1][2] = obj.top;
-                          }
-                        });
-                      } else if(obj.type === "path") {
-                        obj._setPath(obj.path);
-                        obj.selectable = false;
-                      }
-                      canvas.add(obj);
-                    }
-                  });
-                }
-              );
-
-              matchQuizData = {
-                canvas: data.startingCanvas,
-                title: "",
-                gameType: quizType,
-              };
-
-              isCreateQuiz = true;
-              isCreateAnswer = true;
-
-              canvas.renderAll();
-            } else {
-              alert("Invalid Quiz file input!");
-            }
-          }
+          socket.emit("loadQuiz", data);
+          loadQuiz(data);
         };
 
         reader.readAsText(e.target.files[0]);
         this.value = "";
       };
+
+      socket.on("loadQuiz", function (data) {
+        loadQuiz(data);
+      })
 
       dndItem.onchange = function (e) {
         var files = e.target.files,
@@ -12685,12 +12887,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
         });
       });
 
-      $("#question-submit").on("click", function () {
+      function createQuiz(questionValue) {
         if(questions.length > 0) questions = [];
         if(correctAnswers.length > 0) correctAnswers = [];
-
-        let questionValue = $("#question-input").val();
-        canvas.clear();
 
         table = createTable(createTableObject(questionValue));
 
@@ -12700,8 +12899,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
         isCreateQuiz = true;
 
         canvas.renderAll();
+      }
 
+      $("#question-submit").on("click", function () {
+        $(".btn-eraser-clear")[0].click();
+        $("#change-eraser")[0].click();
+        $("#reset")[0].click();
+
+        let questionValue = $("#question-input").val();
+        createQuiz(questionValue);
+        socket.emit("createQuiz", questionValue);
         $("#quiz-modal")[0].style.display = "none";
+      });
+
+      socket.on("createQuiz", function (data) {
+        createQuiz(data);
       });
 
       var matchQuizData;
@@ -12728,6 +12940,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             top: 50,
             left: 50,
             selectable: false,
+            objectID: randomID()
           });
 
           canvas.add(group);
@@ -13464,6 +13677,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
         quizSetting.checkSound = sound.src;
       });
 
+      socket.on("fetch-quiz", function (quiz) {
+        quiz?.data && loadQuiz(quiz.data)
+        quiz?.question && createQuiz(quiz.question)
+      });
+
       //Toggle between drawing tools
       $("#drwToggleDrawMode").on("click", function () {
         $("#toolbox button").removeClass("active");
@@ -14045,6 +14263,8 @@ function updateLocal(pool_data, objectID, dataChange, socket, moving, options) {
     } else {
       pool_data[index].data = dataChange;
     }
+  } else {
+
   }
   socket.emit("updated", {
     objectID: objectID,

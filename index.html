@@ -60,6 +60,8 @@
     };
   </script>
   <script type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <link rel="icon" href="assets/images/normal/LOGO_New_888tutor_BLACK11.png">
   <!-- STYLE -->
   <style>
     #show-test-tool1 {
@@ -212,11 +214,11 @@
           <!-- LOGO -->
           <div class="logo fl">
             <a>
-              <img src="assets/images/normal/ik_Logo.png" />
+              <img src="assets/images/normal/LOGO_New_888tutor_BLACK.png" />
             </a>
-            <div class="tent" style="float: right;color: #fff;margin-left: 10px;margin-top: 2px">
+            <!-- <div class="tent" style="float: right;color: #fff;margin-left: 10px;margin-top: 2px">
               <p style="color: #ffce0d">iK Tutoring</p>
-            </div>
+            </div> -->
           </div>
 
           <!-- ACTION -->
@@ -312,13 +314,21 @@
                     <img src="assets/images/login/1.png" alt="Avatar" class="avatar">
                     <h1 style="text-align:center">Login</h1>
                   </div>
-                  <div class="" style="padding: 25px 16px 0;">
-                    <input style="width: 100%;" type="text" placeholder="Enter Username" name="username" class="rounded" id="username">
-                    <input style="width: 100%;" type="password" placeholder="Enter Password" name="pass" class="rounded" id="pass">
-                  </div>
-                  <div style="text-align: right;">
-                    <button class="rounded" id="btn_login" type="submit">Login</button>
-                  </div>
+                  <form id="login-form">
+                    <div style="padding: 25px 16px 0;">
+                      <input style="width: 100%;" type="text" placeholder="Enter Username" name="username" class="rounded" id="username" required>
+                      <div style="width: 100%; display: flex; border: 1px solid #ccc; overflow: hidden;" class="rounded">
+                        <input type="password" placeholder="Enter Password" name="pass" id="pass" style="flex: 1; margin: 0; border: 0;" required>
+                        <span id="show-pw" class="show-pw">
+                          <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                        </span>
+                      </div>
+                    </div>
+                    <div style="text-align: right;">
+                      <button class="rounded" id="btn_login" type="submit">Login</button>
+                    </div>
+
+                  </form>
                 </div>
 
                 <div id="create_room" class="modal-content animate hidden" style="top: 20%; height: fit-content;">
@@ -1050,7 +1060,7 @@
                           </p>
 
                           <!-- line type 3 waving line -->
-                          <p id="waving-line" class="draw-line">
+                          <p id="waving-line" class="draw-line hidden">
                             <img src="assets/images/notepad/waveline5.png" />
                           </p>
 
@@ -2110,7 +2120,7 @@
               <div id="yotubeVideo">
                 <div class="item-video hidden" id="video-1" style="top: 50px;left: 100px;z-index: 100; width: 30%; height: 50%; background: #000; padding: 20px;">
                   <input class="ytb-close-btn" type="button" value="X" style="color: red; position: absolute; right: 0; top: 0; font-size: 20px;">
-                  <iframe id="ytbIframe"></iframe>
+                  <iframe id="ytbIframe" credentialless></iframe>
                 </div>
               </div>
 
