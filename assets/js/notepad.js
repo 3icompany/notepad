@@ -3647,6 +3647,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
       });
 
+      window.jsPDF = window.jspdf.jsPDF;
+      $("#icon-export").on("click", function () {
+        var imgData = canvas.toDataURL("image/jpeg", 1.0);
+        var pdf = new jsPDF();
+
+        pdf.addImage(imgData, 'JPEG', 0, 0);
+        pdf.save("canvas.pdf");
+      });
+
       //vuong
       $("#login-form").on("submit", function (e) {
         e.preventDefault();
@@ -5397,7 +5406,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if(item.objectID == data.objectID) {
               // console.log("updated", { data });
               updateAtributes.forEach(a => {
-                if (a === "fill" && data.dataChange[a] === "rgb(0,0,0)") {
+                if(a === "fill" && data.dataChange[a] === "rgb(0,0,0)") {
                   return;
                 }
                 if(data.dataChange[a]) {
@@ -5408,7 +5417,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 item._objects.forEach((o, index) => {
                   const object = data.dataChange.objects[index]
                   updateAtributes.forEach(a => {
-                    if (a === "fill" && data.dataChange[a] === "rgb(0,0,0)") {
+                    if(a === "fill" && data.dataChange[a] === "rgb(0,0,0)") {
                       return;
                     }
                     if(object && object[a]) {
@@ -5418,7 +5427,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                   if(o.type === "group") {
                     o._objects.forEach((obj, i) => {
                       updateAtributes.forEach(a => {
-                        if (a === "fill" && data.dataChange[a] === "rgb(0,0,0)") {
+                        if(a === "fill" && data.dataChange[a] === "rgb(0,0,0)") {
                           return;
                         }
                         if(object?.objects[a]) {
@@ -7785,66 +7794,89 @@ window.addEventListener('DOMContentLoaded', (event) => {
       return null;
     }
 
+    function selectObjMousedown(obj) {
+      console.log("mousedown", { obj });
+      if(isCreateQuiz && (isMakingAnswer || isDoQuiz)) {
+        obj.select = !obj.select;
+        if(obj.select) {
+          obj._objects[0].set({
+            fill: obj.colorSelected,
+          });
+          obj._objects[1].set({
+            fill: obj.colorTextSelected,
+          });
+          obj.playSound("selected");
+
+          const answer = {
+            id: obj.objectID,
+            name: "select-obj-quiz",
+            value: obj.text,
+          };
+          if(isMakingAnswer) {
+            correctAnswers.push(answer);
+          } else if(isDoQuiz) {
+            console.log(userAnswers);
+            userAnswers.push(answer);
+          }
+        } else {
+          obj._objects[0].set({
+            fill: obj.colorUnselected,
+          });
+          obj._objects[1].set({
+            fill: obj.colorText,
+          });
+          obj.playSound("unselected");
+
+          if(isMakingAnswer) {
+            correctAnswers = correctAnswers.filter(
+              (item) => item.id != obj.objectID
+            );
+          } else if(isDoQuiz) {
+            console.log(userAnswers);
+            userAnswers = userAnswers.filter(
+              (item) => item.id != obj.objectID
+            );
+          }
+        }
+
+        if(isMakingAnswer) {
+          correctAnswerBox.text = correctAnswers
+            .map((item) => item.value)
+            .join(" ");
+        }
+        else if(isDoQuiz) {
+          userAnswerBox.text = userAnswers.map((item) => item.value).join(" ");
+        }
+
+      }
+    }
+
     // handle select obj type
     function selectObjEventHandler(obj) {
       obj.on("mousedown", function () {
-        console.log("mousedown");
-        if(isCreateQuiz && (isMakingAnswer || isDoQuiz)) {
-          this.select = !this.select;
-          if(this.select) {
-            this._objects[0].set({
-              fill: this.colorSelected,
-            });
-            this._objects[1].set({
-              fill: this.colorTextSelected,
-            });
-            this.playSound("selected");
-
-            const answer = {
-              id: this.objectID,
-              name: "select-obj-quiz",
-              value: this.text,
-            };
-            if(isMakingAnswer) {
-              correctAnswers.push(answer);
-            } else if(isDoQuiz) {
-              console.log(userAnswers);
-              userAnswers.push(answer);
-            }
-          } else {
-            this._objects[0].set({
-              fill: this.colorUnselected,
-            });
-            this._objects[1].set({
-              fill: this.colorText,
-            });
-            this.playSound("unselected");
-
-            if(isMakingAnswer) {
-              correctAnswers = correctAnswers.filter(
-                (item) => item.id != this.objectID
-              );
-            } else if(isDoQuiz) {
-              console.log(userAnswers);
-              userAnswers = userAnswers.filter(
-                (item) => item.id != this.objectID
-              );
-            }
-          }
-
-          if(isMakingAnswer) {
-            correctAnswerBox.text = correctAnswers
-              .map((item) => item.value)
-              .join(" ");
-          } else if(isDoQuiz) {
-            console.log(userAnswerBox);
-            userAnswerBox.text = userAnswers.map((item) => item.value).join(" ");
-          }
-
-          canvas.requestRenderAll();
-        }
+        selectObjMousedown(obj);
+        canvas.requestRenderAll();
+        socket.emit("selectObjMousedown", {
+          cellID: obj.cellID,
+          correctAnswers,
+          userAnswers,
+        });
       });
     }
+
+    socket.on("selectObjMousedown", function (data) {
+      canvas.forEachObject(o => {
+        if(o.name === "quiz") {
+          o._objects.forEach(cell => {
+            if(cell.cellID === data.cellID) {
+              selectObjMousedown(cell);
+              canvas.requestRenderAll();
+            }
+          })
+        }
+      })
+    });
+
 
     // handle input obj type
     function inputObjEventHandler(item) {
@@ -7852,39 +7884,39 @@ window.addEventListener('DOMContentLoaded', (event) => {
         snap: true,
       });
 
-      item.on('mousedblclick', function() {
-          activeObject = this;
+      item.on('mousedblclick', function () {
+        activeObject = this;
 
-          const editForm = $('#edit-form')[ 0 ];
+        const editForm = $('#edit-form')[0];
 
-          if(editForm.style.visibility === 'hidden') {
-              $('#soundSelected')[ 0 ].nextElementSibling.innerText = this.nameSoundSelected;
-              $('#soundUnselected')[ 0 ].nextElementSibling.innerText = this.nameSoundUnselected;
-              $('#soundTyping')[ 0 ].nextElementSibling.innerText = this.nameSoundTyping;
-              $('#soundSnap')[ 0 ].nextElementSibling.innerText = this.nameSoundSnap;
+        if(editForm.style.visibility === 'hidden') {
+          $('#soundSelected')[0].nextElementSibling.innerText = this.nameSoundSelected;
+          $('#soundUnselected')[0].nextElementSibling.innerText = this.nameSoundUnselected;
+          $('#soundTyping')[0].nextElementSibling.innerText = this.nameSoundTyping;
+          $('#soundSnap')[0].nextElementSibling.innerText = this.nameSoundSnap;
 
-              $('#objSelect')[ 0 ].checked = this.select;
-              $('#objInput')[ 0 ].checked = this.input;
-              $('#objSnap')[ 0 ].checked = this.snap;
-              $('#objControl')[ 0 ].checked = this.hasControls;
-              $('#textColor')[ 0 ].value = this.colorText;
-              $('#borderColor')[ 0 ].value = this.colorBorder;
-              $('#borderWidth')[ 0 ].value = this.widthBorder;
-              $('#objCurve')[ 0 ].value = this.curve;
-              $('#objAngle')[ 0 ].value = this.angle;
-              $('#objBring')[ 0 ].value = this.position;
-              $('#objShadow')[ 0 ].innerText = this.hasShadow ? 'On' : 'Off';
-              $('#objFixed')[ 0 ].innerText = this.lockMovementX ? 'On' : 'Off';
+          $('#objSelect')[0].checked = this.select;
+          $('#objInput')[0].checked = this.input;
+          $('#objSnap')[0].checked = this.snap;
+          $('#objControl')[0].checked = this.hasControls;
+          $('#textColor')[0].value = this.colorText;
+          $('#borderColor')[0].value = this.colorBorder;
+          $('#borderWidth')[0].value = this.widthBorder;
+          $('#objCurve')[0].value = this.curve;
+          $('#objAngle')[0].value = this.angle;
+          $('#objBring')[0].value = this.position;
+          $('#objShadow')[0].innerText = this.hasShadow ? 'On' : 'Off';
+          $('#objFixed')[0].innerText = this.lockMovementX ? 'On' : 'Off';
 
-              const zoom = canvas.getZoom();
-              const top = (this.top) * zoom + canvas.viewportTransform[ 5 ] - 60;
-              const left = (this.left + (this.width / 2) * this.scaleX) * zoom + canvas.viewportTransform[ 4 ] - 180;
+          const zoom = canvas.getZoom();
+          const top = (this.top) * zoom + canvas.viewportTransform[5] - 60;
+          const left = (this.left + (this.width / 2) * this.scaleX) * zoom + canvas.viewportTransform[4] - 180;
 
-              $('#edit-form').css({ 'visibility': 'visible', 'top': top + 'px', 'left': left + 'px' });
-          }
-          else {
-              hidePopupMenu();
-          }
+          $('#edit-form').css({ 'visibility': 'visible', 'top': top + 'px', 'left': left + 'px' });
+        }
+        else {
+          hidePopupMenu();
+        }
       });
       item.on("mouseup", function () {
         console.log("mouseup");
@@ -9941,10 +9973,35 @@ window.addEventListener('DOMContentLoaded', (event) => {
             "pointer-events": "none",
           });
         }
+        // play variables
+        isCreateQuiz = false;
+        isCreateAnswer = false;
+        correctAnswers = [];
+        userAnswers = [];
+        isViewAnswer = false;
+        isMakingAnswer = false;
+        isDoQuiz = false;
+        isChecked = false;
+        readyCheck = false;
+        isCreateDoquiz = false;
       } else {
         quizMode = false;
       }
     });
+
+    $("#quizs-body").on("change", function() {
+      isCreateQuiz = false;
+      isCreateAnswer = false;
+      correctAnswers = [];
+      userAnswers = [];
+      isViewAnswer = false;
+      isMakingAnswer = false;
+      isDoQuiz = false;
+      isChecked = false;
+      readyCheck = false;
+      isCreateDoquiz = false;
+    });
+
     $("#quiz-create").on("click", function () {
       canvas.clear();
 
@@ -11253,7 +11310,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     canvas.on("object:modified", function (e) {
       e.target.clicked = false;
-      if(e.target) {
+      if(e.target && !isMakingAnswer && !isDoQuiz) {
         updateLocal(
           pool_data,
           e.target.objectID,
@@ -11268,7 +11325,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     });
 
     canvas.on("mouse:over", function (obj) {
-      if(!isErasing && !isSelecting && !isDrawLine) {
+      if(!isErasing && !isSelecting && !isDrawLine && !isMakingAnswer && !isDoQuiz) {
         if(obj.target && !obj.target.isBackground) {
           // if (obj.target.name != 'curve-point' &&
           //     // obj.target.name != 'lineConnect' &&
@@ -11301,6 +11358,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
           //         mr: false
           //     });
           // }
+          if (obj.target.name === "quiz") {
+              obj.target.setControlsVisibility({
+                  tl: false,
+                  tr: false,
+                  bl: false,
+                  br: false,
+                  mtr: false,
+                  mb: false,
+                  mt: false,
+                  ml: false,
+                  mr: false
+              });
+          }
           canvas.setActiveObject(obj.target);
         }
         canvas.renderAll();
@@ -11359,7 +11429,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
       isMoving = false;
       isRotating = false;
 
-      if(canvas.getActiveObject()) {
+      if(canvas.getActiveObject() && !isMakingAnswer && !isDoQuiz) {
         // console.log(canvas.getActiveObject());
         var object = canvas.getActiveObject();
         updateLocal(
@@ -12320,6 +12390,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             setDefaultAttributes(newCell);
             startActiveObject(newCell);
             newCell.set({
+              cellID: `${i}-${index}`,
               colorSelected: quizSetting.bgSelectColor,
               colorUnselected: quizSetting.bgColor,
               soundSelected: quizSetting.selectSound,
@@ -12810,13 +12881,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
         let reader = new FileReader();
 
         reader.onload = function (e) {
-          $(".btn-eraser-clear")[0].click();
-          $("#change-eraser")[0].click();
-          $("#reset")[0].click();
+          // $(".btn-eraser-clear")[0].click();
+          // $("#change-eraser")[0].click();
+          // $("#reset")[0].click();
+          pool_data = pool_data.filter(
+            (obj) => obj.layer !== canvas.id || obj.data.name === "grid"
+          );
+          // pool_data = []
+          socket.emit("update", pool_data);
+          canvas.clear();
+          loadLayerCanvasJsonNew(pool_data, canvas);
 
           const data = JSON.parse(e.target.result);
 
           socket.emit("loadQuiz", data);
+          // $("#quiz")[0].click();
           loadQuiz(data);
         };
 
@@ -12914,10 +12993,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
       socket.on("createQuiz", function (data) {
         createQuiz(data);
+        $("#quiz")[0].click();
       });
 
-      var matchQuizData;
-      answerQuiz.onclick = function () {
+      function answerQuizFunc() {
         var quizType = $("#quiz-type").val();
         if(isCreateQuiz && !isCreateAnswer) {
           const title = new fabric.Text("Answer Correct", {
@@ -12954,146 +13033,113 @@ window.addEventListener('DOMContentLoaded', (event) => {
           !isChecked &&
           !isDoQuiz &&
           !readyCheck &&
-          !isViewAnswer &&
-          quizType == "quiz-1"
+          !isViewAnswer
         ) {
-          isMakingAnswer = !isMakingAnswer;
-          if(isMakingAnswer) {
-            answerQuiz.innerHTML = `
-                        <img src="assets/images/notepad/save.png" />
-                        <span class="hidden tooltip-icon">
-                        <span class="h">Save Answer</span>
-                        </span>
-                        `;
+          if(quizType === "quiz-1") {
+            console.log("quiz 1");
+            if(isMakingAnswer) {
+              correctAnswers = [];
+              correctAnswerBox.text = "";
+              table._objects.forEach((obj) => {
+                if(obj.name == "quiz-selectObj") {
+                  obj.select = false;
+                  obj.item(0).fill = obj.colorUnselected;
+                }
+              });
+            } else {
+              table._objects.forEach((obj) => {
+                if(obj.name == "quiz-selectObj") {
+                  obj.select = false;
+                  obj._objects[0].set({
+                    fill: obj.colorUnselected,
+                  });
+                  obj._objects[1].set({
+                    fill: obj.colorText,
+                  });
+                }
+              });
+            }
+          }
+          else if(quizType === "quiz-2") {
+            if(isMakingAnswer) {
+              correctAnswers = [];
+              if(correctAnswerBox) correctAnswerBox.text = "";
+              canvas._objects = canvas._objects.filter(
+                (obj) => obj.name != "quiz-inputObj"
+              );
 
-            correctAnswers = [];
-            correctAnswerBox.text = "";
-            table._objects.forEach((obj) => {
-              if(obj.name == "quiz-selectObj") {
-                obj.select = false;
-                obj.item(0).fill = obj.colorUnselected;
-              }
-            });
-          } else {
-            answerQuiz.innerHTML = `
-                            <img src="assets/images/notepad/create-answer.png" />
-                            <span class="hidden tooltip-icon">
-                                <span class="h">Answer</span>
-                            </span>
-                        `;
+              answerRect();
+            } else {
+              canvas._objects.forEach((obj) => {
+                if(obj.name == "quiz-inputObj") {
+                  obj.fixed = true;
+                  obj.item(1).text = "";
+                }
+              });
+            }
+          }
+          else if(quizType === "quiz-3") {
+            if(isMakingAnswer) {
+              correctAnswerMatch = [];
+              correctAnswerBox.text = "";
 
-            table._objects.forEach((obj) => {
-              if(obj.name == "quiz-selectObj") {
-                obj.select = false;
-                obj._objects[0].set({
-                  fill: obj.colorUnselected,
-                });
-                obj._objects[1].set({
-                  fill: obj.colorText,
-                });
-              }
-            });
+              const saveData = {
+                canvas: JSON.stringify(canvas.toJSON(customAttributes)),
+                title: quizTitle,
+                gameType: quizType,
+              };
+              matchQuizData = saveData;
+            } else {
+            }
           }
         }
-
-        if(
-          !isChecked &&
-          !isDoQuiz &&
-          !readyCheck &&
-          !isViewAnswer &&
-          quizType == "quiz-2"
-        ) {
-          isMakingAnswer = !isMakingAnswer;
-          if(isMakingAnswer) {
-            answerQuiz.innerHTML = `
-                        <img src="assets/images/notepad/save.png" />
-                        <span class="hidden tooltip-icon">
-                        <span class="h">Save Answer</span>
-                        </span>
-                        `;
-
-            correctAnswers = [];
-            if(correctAnswerBox) correctAnswerBox.text = "";
-            canvas._objects = canvas._objects.filter(
-              (obj) => obj.name != "quiz-inputObj"
-            );
-
-            answerRect();
-          } else {
-            answerQuiz.innerHTML = `
-                            <img src="assets/images/notepad/create-answer.png" />
-                            <span class="hidden tooltip-icon">
-                                <span class="h">Answer</span>
-                            </span>
-                        `;
-
-            canvas._objects.forEach((obj) => {
-              if(obj.name == "quiz-inputObj") {
-                obj.fixed = true;
-                obj.item(1).text = "";
-              }
-            });
-          }
+        if(isMakingAnswer) {
+          answerQuiz.innerHTML = `
+                      <img src="assets/images/notepad/save.png" />
+                      <span class="hidden tooltip-icon">
+                      <span class="h">Save Answer</span>
+                      </span>
+                      `;
+        } else {
+          answerQuiz.innerHTML = `
+                          <img src="assets/images/notepad/create-answer.png" />
+                          <span class="hidden tooltip-icon">
+                              <span class="h">Answer</span>
+                          </span>
+                      `;
         }
+      }
 
-        if(
-          !isChecked &&
-          !isDoQuiz &&
-          !readyCheck &&
-          !isViewAnswer &&
-          quizType == "quiz-3"
-        ) {
-          isMakingAnswer = !isMakingAnswer;
-          if(isMakingAnswer) {
-            answerQuiz.innerHTML = `
-                        <img src="assets/images/notepad/save.png" />
-                        <span class="hidden tooltip-icon">
-                        <span class="h">Save Answer</span>
-                        </span>
-                        `;
-
-            correctAnswerMatch = [];
-            correctAnswerBox.text = "";
-
-            const saveData = {
-              canvas: JSON.stringify(canvas.toJSON(customAttributes)),
-              title: quizTitle,
-              gameType: quizType,
-            };
-            matchQuizData = saveData;
-          } else {
-            answerQuiz.innerHTML = `
-                            <img src="assets/images/notepad/create-answer.png" />
-                            <span class="hidden tooltip-icon">
-                                <span class="h">Answer</span>
-                            </span>
-                        `;
-          }
-        }
+      var matchQuizData;
+      answerQuiz.onclick = function () {
+        isMakingAnswer = !isMakingAnswer;
+        answerQuizFunc();
         isCreateAnswer = true;
 
-        canvas.renderAll();
+        console.log("emit event: answerQuiz");
+        socket.emit("answerQuiz", { isCreateAnswer, isMakingAnswer });
+        canvas.requestRenderAll();
       };
 
-      viewAnswerQuiz.onclick = function () {
-        var quizType = $("#quiz-type").val();
-        if(quizType == "quiz-1") {
-          if(
-            correctAnswers.length > 0 &&
-            !isMakingAnswer &&
-            !isDoQuiz &&
-            !isChecked &&
-            !isCreateDoquiz
-          ) {
-            if(isViewAnswer) {
-              viewAnswerQuiz.innerHTML = `
-                                <img src="assets/images/notepad/unview-answer.png" />
-                                <span class="hidden tooltip-icon">
-                                    <span class="h">View Answer</span>
-                                </span>
-                            `;
-              isViewAnswer = false;
+      socket.on("answerQuiz", function (data) {
+        console.log("on event: answerQuiz", data);
+        isMakingAnswer = data.isMakingAnswer;
+        answerQuizFunc();
+        canvas.requestRenderAll();
+        isCreateAnswer = true;
+      });
 
+      function viewAnswerFunc() {
+        var quizType = $("#quiz-type").val();
+        if(
+          correctAnswers.length > 0 &&
+          !isMakingAnswer &&
+          !isDoQuiz &&
+          !isChecked &&
+          !isCreateDoquiz
+        ) {
+          if(quizType == "quiz-1") {
+            if(isViewAnswer) {
               table._objects.forEach((obj) => {
                 if(obj.name == "quiz-selectObj") {
                   obj._objects[0].set({
@@ -13105,14 +13151,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
               });
             } else {
-              viewAnswerQuiz.innerHTML = `
-                                <img src="assets/images/notepad/view-answer.png" />
-                                <span class="hidden tooltip-icon">
-                                    <span class="h">Unview Answer</span>
-                                </span>
-                            `;
-              isViewAnswer = true;
-
               correctAnswers.forEach((item) => {
                 const obj = table._objects.find(
                   (object) => item.id == object.objectID
@@ -13127,24 +13165,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
               });
             }
             canvas.requestRenderAll();
-          }
-        } else if(quizType == "quiz-2") {
-          if(
-            correctAnswers.length > 0 &&
-            !isMakingAnswer &&
-            !isDoQuiz &&
-            !isChecked &&
-            !isCreateDoquiz
-          ) {
+          } else if(quizType == "quiz-2") {
             if(isViewAnswer) {
-              viewAnswerQuiz.innerHTML = `
-                                <img src="assets/images/notepad/unview-answer.png" />
-                                <span class="hidden tooltip-icon">
-                                    <span class="h">View Answer</span>
-                                </span>
-                            `;
-              isViewAnswer = false;
-
               canvas._objects.forEach((obj) => {
                 if(obj.name == "quiz-inputObj") {
                   var textBox = obj.item(1);
@@ -13152,14 +13174,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
               });
             } else {
-              viewAnswerQuiz.innerHTML = `
-                                <img src="assets/images/notepad/view-answer.png" />
-                                <span class="hidden tooltip-icon">
-                                    <span class="h">Unview Answer</span>
-                                </span>
-                            `;
-              isViewAnswer = true;
-
               correctAnswers.forEach((item) => {
                 const obj = canvas._objects.find(
                   (object) => item.id == object.objectID
@@ -13171,37 +13185,40 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             canvas.requestRenderAll();
           }
-        } else if(quizType == "quiz-3") {
-          if(
-            correctAnswerMatch.length > 0 &&
-            !isMakingAnswer &&
-            !isDoQuiz &&
-            !isChecked &&
-            !isCreateDoquiz
-          ) {
-            if(isViewAnswer) {
-              viewAnswerQuiz.innerHTML = `
-                                <img src="assets/images/notepad/unview-answer.png" />
-                                <span class="hidden tooltip-icon">
-                                    <span class="h">View Answer</span>
-                                </span>
-                            `;
-              isViewAnswer = false;
-            } else {
-              viewAnswerQuiz.innerHTML = `
-                                <img src="assets/images/notepad/view-answer.png" />
-                                <span class="hidden tooltip-icon">
-                                    <span class="h">Unview Answer</span>
-                                </span>
-                            `;
-              isViewAnswer = true;
-            }
-            canvas.requestRenderAll();
-          }
         }
+
+        if(isViewAnswer) {
+          viewAnswerQuiz.innerHTML =
+            `
+              <img src="assets/images/notepad/unview-answer.png" />
+              <span class="hidden tooltip-icon">
+                  <span class="h">View Answer</span>
+              </span>
+            `;
+        } else {
+          viewAnswerQuiz.innerHTML =
+            `
+              <img src="assets/images/notepad/view-answer.png" />
+              <span class="hidden tooltip-icon">
+                  <span class="h">Unview Answer</span>
+              </span>
+            `;
+        }
+        isViewAnswer = !isViewAnswer;
+      }
+
+      viewAnswerQuiz.onclick = function () {
+        viewAnswerFunc();
+        console.log("emit event: viewAnswerQuiz");
+        socket.emit("viewAnswerQuiz", { isViewAnswer });
       };
 
-      doQuiz.onclick = function (e) {
+      socket.on("viewAnswerQuiz", function (data) {
+        console.log("on event: viewAnswerQuiz", data);
+        viewAnswerFunc();
+      });
+
+      function doQuizFunc () {
         var quizType = $("#quiz-type").val();
         if(isCreateAnswer && !isCreateDoquiz) {
           const title = new fabric.Text("User Answer", {
@@ -13231,147 +13248,114 @@ window.addEventListener('DOMContentLoaded', (event) => {
           });
 
           canvas.add(group);
-          isCreateDoquiz = true;
         }
-
+        
+        isDoQuiz = !isDoQuiz;
         if(
           !isChecked &&
           !isMakingAnswer &&
-          !isViewAnswer &&
-          quizType == "quiz-1"
+          !isViewAnswer 
         ) {
-          isDoQuiz = !isDoQuiz;
-          // console.log('do quiz');
-          if(isDoQuiz) {
-            doQuiz.innerHTML = `
-                        <img src="assets/images/notepad/save.png" />
-                        <span class="hidden tooltip-icon">
-                        <span class="h">Save Answer</span>
-                        </span>
-                        `;
-
-            userAnswers = [];
-
-            userAnswerBox.text = "";
-            table._objects.forEach((obj) => {
-              if(obj.name == "quiz-inputObj") {
-                obj.select = false;
-                obj.item(0).fill = obj.colorUnselected;
-              }
-            });
-
-            readyCheck = false;
-          } else {
-            doQuiz.innerHTML = `
-                            <img src="assets/images/notepad/edit.png" />
-                            <span class="hidden tooltip-icon">
-                                <span class="h">Answer</span>
-                            </span>
-                        `;
-
-            table._objects.forEach((obj) => {
-              if(obj.name == "quiz-inputObj") {
-                obj._objects[0].set({
-                  fill: obj.colorUnselected,
-                });
-                obj._objects[1].set({
-                  fill: obj.colorText,
-                });
-              }
-            });
-
-            readyCheck = true;
+          if (quizType == "quiz-1") {
+            if(isDoQuiz) {
+              userAnswers = [];
+  
+              userAnswerBox.text = "";
+              table._objects.forEach((obj) => {
+                if(obj.name == "quiz-inputObj") {
+                  obj.select = false;
+                  obj.item(0).fill = obj.colorUnselected;
+                }
+              });
+            } else {
+              table._objects.forEach((obj) => {
+                if(obj.name == "quiz-inputObj") {
+                  obj._objects[0].set({
+                    fill: obj.colorUnselected,
+                  });
+                  obj._objects[1].set({
+                    fill: obj.colorText,
+                  });
+                }
+              });
+            }
+          } else if (quizType == "quiz-2") {
+            if(isDoQuiz) {
+              userAnswers = [];
+  
+              userAnswerBox.text = "";
+              canvas._objects.forEach((obj) => {
+                if(obj.name == "quiz-inputObj") {
+                  obj.item(1).text = "";
+                }
+              });
+  
+              // correctAnswers.forEach(item => {
+              //     const obj = canvas._objects.find(object => item.id == object.objectID);
+  
+              //     obj.visible = true;
+              // });
+  
+            } else {
+              // canvas._objects.forEach(obj => {
+              //     if (obj.name == 'quiz-inputObj') {
+              //         obj.visible = true;
+              //         var textBox = obj.item(1);
+              //         textBox.text = obj.value;
+              //     }
+              // });
+  
+  
+              canvas.discardActiveObject();
+            }
+          } else if (quizType == "quiz-3") {
+            if(isDoQuiz) {
+              userResult = [];
+              userAnswerBox.text = "";
+              var startingCanvas = JSON.parse(matchQuizData.canvas);
+              canvas.clear();
+              countItem = 0;
+              loadCanvasJsonNew(startingCanvas);
+              console.log(correctAnswerMatch);
+            }
           }
         }
-        if(
-          !isChecked &&
-          !isMakingAnswer &&
-          !isViewAnswer &&
-          quizType == "quiz-2"
-        ) {
-          isDoQuiz = !isDoQuiz;
-          console.log(canvas);
-          if(isDoQuiz) {
-            doQuiz.innerHTML = `
-                        <img src="assets/images/notepad/save.png" />
-                        <span class="hidden tooltip-icon">
-                        <span class="h">Save Answer</span>
-                        </span>
-                        `;
 
-            userAnswers = [];
-
-            userAnswerBox.text = "";
-            canvas._objects.forEach((obj) => {
-              if(obj.name == "quiz-inputObj") {
-                obj.item(1).text = "";
-              }
-            });
-
-            // correctAnswers.forEach(item => {
-            //     const obj = canvas._objects.find(object => item.id == object.objectID);
-
-            //     obj.visible = true;
-            // });
-
-            readyCheck = false;
-          } else {
-            doQuiz.innerHTML = `
-                            <img src="assets/images/notepad/edit.png" />
-                            <span class="hidden tooltip-icon">
-                                <span class="h">Answer</span>
-                            </span>
-                        `;
-            // canvas._objects.forEach(obj => {
-            //     if (obj.name == 'quiz-inputObj') {
-            //         obj.visible = true;
-            //         var textBox = obj.item(1);
-            //         textBox.text = obj.value;
-            //     }
-            // });
-
-            readyCheck = true;
-
-            canvas.discardActiveObject();
-          }
-        }
-        if(
-          !isChecked &&
-          !isMakingAnswer &&
-          !isViewAnswer &&
-          quizType == "quiz-3"
-        ) {
-          isDoQuiz = !isDoQuiz;
-          // console.log('do quiz');
-          if(isDoQuiz) {
-            doQuiz.innerHTML = `
-                        <img src="assets/images/notepad/save.png" />
-                        <span class="hidden tooltip-icon">
-                        <span class="h">Save Answer</span>
-                        </span>
-                        `;
-
-            userResult = [];
-            userAnswerBox.text = "";
-            readyCheck = false;
-            var startingCanvas = JSON.parse(matchQuizData.canvas);
-            canvas.clear();
-            countItem = 0;
-            loadCanvasJsonNew(startingCanvas);
-            console.log(correctAnswerMatch);
-          } else {
-            doQuiz.innerHTML = `
-                            <img src="assets/images/notepad/create-answer.png" />
-                            <span class="hidden tooltip-icon">
-                                <span class="h">Answer</span>
-                            </span>
-                        `;
-
-            readyCheck = true;
-          }
+        
+        if(isDoQuiz) {
+          doQuiz.innerHTML = 
+          `
+            <img src="assets/images/notepad/save.png" />
+            <span class="hidden tooltip-icon">
+            <span class="h">Save Answer</span>
+            </span>
+          `;
+          readyCheck = false;
+        } else {
+          doQuiz.innerHTML = 
+          `
+            <img src="assets/images/notepad/edit.png" />
+            <span class="hidden tooltip-icon">
+                <span class="h">Answer</span>
+            </span>
+          `;
+          readyCheck = true;
         }
         canvas.requestRenderAll();
+      }
+
+      doQuiz.onclick = function (e) {
+        doQuizFunc();
+        isCreateDoquiz = true;
+        console.log("emit event: doQuiz");
+        socket.emit("doQuiz", { isCreateDoquiz, isDoQuiz, readyCheck });
       };
+
+      socket.on("doQuiz", function (data) {
+        console.log("on event: doQuiz", data);
+        doQuizFunc();
+        isCreateDoquiz = true;
+      });
 
       function answerCmp(a, b) {
         if(a.id < b.id) {
@@ -13434,7 +13418,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         return correctAnswerMatch != userResult;
       }
 
-      checkQuiz.onclick = function () {
+      function checkQuizFunc () {
         var quizType = $("#quiz-type").val();
         if(readyCheck && !isChecked) {
           const title = new fabric.Text("Result", {
@@ -13493,7 +13477,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
               content.text = "False";
               table.incorrectSound.play();
             }
-            isChecked = true;
           } else if(quizType == "quiz-2") {
             correctAnswers.forEach((item) => {
               const obj = canvas._objects.find(
@@ -13533,7 +13516,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
               content.text = "False";
               table.incorrectSound.play();
             }
-            isChecked = true;
           } else if(quizType == "quiz-3") {
             if(checkAnswerMatch()) {
               content.text = "True";
@@ -13547,8 +13529,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
           canvas.add(group);
         }
 
-        canvas.renderAll();
+        canvas.requestRenderAll();
+      }
+
+      checkQuiz.onclick = function () {
+        checkQuizFunc();
+        isChecked = true;
+        console.log("emit event: checkQuiz");
+        socket.emit("checkQuiz", { isChecked });
       };
+
+      socket.on("checkQuiz", function (data) {
+        console.log("on event: checkQuiz", data);
+        checkQuizFunc();
+        isChecked = true;
+      });
 
       // quiz save - Kiet edit
       $("#quiz-save").on("click", function () {
