@@ -1015,6 +1015,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 } else if(obj.type === "group") {
                   if(obj.name == "line-style" && obj.lineType == "curve") {
                     obj._objects.forEach((obj) => obj._setPath(obj.path));
+                  } else if (obj.name === "quiz-inputObj") {
+                    objectSnapAdjacent(obj);
                   }
                   obj._objects.forEach((child) => {
                     if(child.id == "answer-correct-textbox") {
@@ -1327,6 +1329,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 isBackground: obj.isBackground,
               });
               if(quizType == "quiz-3") {
+                setDefaultAttributes(img);
                 img.set({
                   name: obj.name,
                   id: obj.id,
@@ -5404,6 +5407,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
         } else {
           canvas.getObjects().forEach((item) => {
             if(item.objectID == data.objectID) {
+              if (data.moving) {
+                if (item.name == "quiz-matchObj") {
+                  matchOjbMoving(item);
+                  // return;
+                } else {
+                  objectSnapCanvas(item);
+                  objectSnapAdjacent(item);
+
+                }
+              }
               // console.log("updated", { data });
               updateAtributes.forEach(a => {
                 if(a === "fill" && data.dataChange[a] === "rgb(0,0,0)") {
@@ -5489,6 +5502,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
         if(id) {
           canvas.forEachObject((o) => {
             if(o.objectID === id) {
+              o.set({
+                isBackground: true,
+                isDrag: false,
+                isDrop: false,
+                lockMovementX: true,
+                lockMovementY: true,
+              });
+              repositionDragDrop();
               canvas.setBackgroundImage(o, canvas.renderAll.bind(canvas), {
                 top: 0,
                 left: 0,
@@ -6600,9 +6621,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
           }
           _clipboard.top += 10;
           _clipboard.left += 10;
-          objectSnapAdjacent(clonedObj);
+          if (isMakingAnswer) {
+            objectSnapAdjacent(clonedObj);
+          }
           canvas.setActiveObject(clonedObj);
           canvas.requestRenderAll();
+          isLoadDataLocal = false;
+          emitEvent();
         }, customAttributes);
       }
     }
@@ -7562,6 +7587,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         else if(name == "snap") audio.src = obj.soundSnap;
         else if(name == "soundWorksheet") audio.src = obj.soundWorksheet;
         else console.error("Invalid sound name:", name);
+        console.log("play sound", name, audio.src);
         audio.load();
         audio.play();
       };
@@ -7604,10 +7630,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
           touchPopupMenu(e.pointer, () => showPopUpMenu(obj));
         });
 
-        obj.on("moving", function (options) {
+        obj.on("moving", function () {
           if(this.snap) {
             const _this = this;
-            options = options.transform;
+            // options = options.transform;
             // Sets corner position coordinates based on current angle, width and height
             objectSnapCanvas(this);
 
@@ -7877,6 +7903,59 @@ window.addEventListener('DOMContentLoaded', (event) => {
       })
     });
 
+    function inputObjEdit(objectID, newVal) {
+      if(newVal && newVal != "") {
+        const answer = {
+          id: objectID,
+          name: "input-obj-quiz",
+          value: newVal.toUpperCase(),
+        };
+        if(isMakingAnswer) {
+          var indexId = correctAnswers.findIndex(
+            (x) => x.id == answer.id
+          );
+          if(indexId != -1) {
+            correctAnswers[indexId].value = newVal;
+          } else {
+            correctAnswers.push(answer);
+          }
+        } else if(isDoQuiz) {
+          // console.log(userAnswers);
+          var indexId = userAnswers.findIndex((x) => x.id == answer.id);
+          if(indexId != -1) {
+            userAnswers[indexId].value = newVal;
+          } else {
+            userAnswers.push(answer);
+          }
+        }
+      } else {
+        if(isMakingAnswer) {
+          correctAnswers = correctAnswers.filter(
+            (item) => item.id != objectID
+          );
+        } else if(isDoQuiz) {
+          // console.log(userAnswers);
+          userAnswers = userAnswers.filter(
+            (item) => item.id != objectID
+          );
+        }
+      }
+      // console.log('test', object, obj);
+      // comment before, you must call this
+      // object.addWithUpdate();
+
+
+      if(isMakingAnswer) {
+        correctAnswerBox.text = correctAnswers
+          .map((item) => item.id + " - " + item.value)
+          .join(", ");
+      } else if(isDoQuiz) {
+        // console.log(userAnswerBox);
+        userAnswerBox.text = userAnswers
+          .map((item) => item.id + " - " + item.value)
+          .join(", ");
+      }
+    }
 
     // handle input obj type
     function inputObjEventHandler(item) {
@@ -7920,7 +7999,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
       });
       item.on("mouseup", function () {
         console.log("mouseup");
-        // console.log(item);
+        console.log(isCreateQuiz, isMakingAnswer, isDoQuiz);
         if(isCreateQuiz && (isMakingAnswer || isDoQuiz)) {
           var object = this;
           objectMiro = null;
@@ -7968,93 +8047,46 @@ window.addEventListener('DOMContentLoaded', (event) => {
               let newVal = textForEditing.text;
               let oldVal = obj.text;
 
-              newVal = newVal[newVal.length - 1];
-              // then we check if text is changed
+              newVal = newVal[newVal.length - 1].toUpperCase();
               obj.set({
-                text: newVal.toUpperCase(),
+                text: newVal,
                 visible: true,
                 // width: textForEditing.width,
                 // left: textForEditing.left,
-
+        
                 // fontSize: textForEditing.fontSize,
                 // fontFamily: textForEditing.fontFamily,
                 textAlign: "center",
               });
-
-              if(newVal && newVal != "") {
-                const answer = {
-                  id: this.objectID,
-                  name: "input-obj-quiz",
-                  value: newVal.toUpperCase(),
-                };
-                if(isMakingAnswer) {
-                  var indexId = correctAnswers.findIndex(
-                    (x) => x.id == answer.id
-                  );
-                  if(indexId != -1) {
-                    correctAnswers[indexId].value = newVal;
-                  } else {
-                    correctAnswers.push(answer);
-                  }
-                } else if(isDoQuiz) {
-                  // console.log(userAnswers);
-                  var indexId = userAnswers.findIndex((x) => x.id == answer.id);
-                  if(indexId != -1) {
-                    userAnswers[indexId].value = newVal;
-                  } else {
-                    userAnswers.push(answer);
-                  }
-                }
-              } else {
-                if(isMakingAnswer) {
-                  correctAnswers = correctAnswers.filter(
-                    (item) => item.id != this.objectID
-                  );
-                } else if(isDoQuiz) {
-                  // console.log(userAnswers);
-                  userAnswers = userAnswers.filter(
-                    (item) => item.id != this.objectID
-                  );
-                }
-              }
-              // console.log('test', object, obj);
-              // comment before, you must call this
-              // object.addWithUpdate();
-
+        
+              inputObjEdit(this.objectID, newVal);
+              socket.emit("inputObjEdit", { objectID: this.objectID, value: newVal, userAnswers, correctAnswers });
+              
               // we do not need textForEditing anymore
               textForEditing.visible = false;
               canvas.remove(textForEditing);
 
               // optional, buf for better user experience
               canvas.setActiveObject(object);
-
-              if(isMakingAnswer) {
-                correctAnswerBox.text = correctAnswers
-                  .map((item) => item.id + " - " + item.value)
-                  .join(", ");
-              } else if(isDoQuiz) {
-                // console.log(userAnswerBox);
-                userAnswerBox.text = userAnswers
-                  .map((item) => item.id + " - " + item.value)
-                  .join(", ");
-              }
             });
+            
+
             object.clicked = false;
           } else {
             // console.log('here 2');
-
+            
             // object.set({
             //     width: object.item(0).width,
             //     height: object.item(0).height,
             // })
-
-            canvas.requestRenderAll();
-
+            
+            
             // console.log('obj', object);
-
+            
             objectMiro = object;
             object.clicked = true;
           }
+          canvas.requestRenderAll();
         }
       });
       item.on("moving", function () {
@@ -8070,8 +8102,114 @@ window.addEventListener('DOMContentLoaded', (event) => {
       changeCoordinateConnectLine(item);
     }
 
+    socket.on("inputObjEdit", function (data) {
+      console.log("on inputObjEdit", data);
+      canvas.forEachObject(o => {
+        if (o.objectID === data.objectID) {
+          o.item(1).set({
+            text: data.value
+          });
+        }
+      });
+
+      inputObjEdit(data.objectID, data.value);
+      canvas.requestRenderAll();
+    });
+
     // handle match obj type
     var correctAnswerMatch = [];
+
+    function matchOjbMoving(obj) {
+      const snap = 30;
+      if(obj.snap && obj.isDrop != true) {
+        const _this = obj;
+        // Sets corner position coordinates based on current angle, width and height
+        objectSnapCanvas(obj);
+
+        const o1 = {
+          x: obj.top + obj.height / 2,
+          y: obj.left + obj.width / 2,
+        };
+
+        // Loop through objects
+        canvas.forEachObject(function (obj) {
+          if(obj === _this || (obj.name && obj.name === "port")) return;
+
+          const o2 = {
+            x: obj.top + obj.height / 2,
+            y: obj.left + obj.width / 2,
+          };
+          // drag drop quiz handle add - Kiet
+          if(Math.sqrt((o1.x - o2.x) ** 2 + (o1.y - o2.y) ** 2) < snap) {
+            if(_this.isDrag === true) {
+              if(obj.isDrop === true) {
+                // create answer on correct snap
+                if(_this.checked === false) {
+                  if(isMakingAnswer) {
+                    correctAnswerMatch.push(
+                      _this.answerId + "-" + obj.answerId
+                    );
+                    console.log(correctAnswerMatch);
+                  } else if(isDoQuiz) {
+                    userResult.push(_this.answerId + "-" + obj.answerId); // write user result
+                  }
+                  _this.checked = true;
+                  _this.linkedId = obj.answerId;
+                  _this.top = o2.x - _this.height / 2;
+                  _this.left = o2.y - _this.width / 2;
+
+                  _this.playSound("snap");
+                }
+              }
+            } else if(_this.isDrop === true) {
+              // do nothing
+            } else {
+              _this.top = o2.x - _this.height / 2;
+              _this.left = o2.y - _this.width / 2;
+
+              _this.playSound("snap");
+            }
+          } else {
+            if(_this.isDrag === true) {
+              if(_this.checked === true) {
+                if(_this.linkedId === obj.answerId) {
+                  _this.checked = false;
+                  if(isMakingAnswer) {
+                    var index = correctAnswerMatch.findIndex(
+                      (x) => x === _this.answerId + "-" + _this.linkedId
+                    );
+                    correctAnswerMatch.splice(index, 1);
+                  }
+                  if(isDoQuiz) {
+                    var index = userResult.findIndex(
+                      (x) => x === _this.answerId + "-" + _this.linkedId
+                    );
+                    userResult.splice(index, 1);
+                  }
+                  console.log(correctAnswerMatch);
+                }
+              }
+            }
+          }
+
+          if(isMakingAnswer) {
+            correctAnswerBox.text = correctAnswerMatch
+              .map((item) => item)
+              .join(", ");
+          } else if(isDoQuiz) {
+            userAnswerBox.text = userResult.map((item) => item).join(", ");
+          }
+        });
+
+        obj.setCoords();
+      }
+
+      // console.log("obj moving");
+
+      if($("#edit-form")[0].style.visibility === "visible") {
+        hidePopupMenu();
+      }
+    }
 
     function matchObjEventHandler(obj) {
       obj.checked = false;
@@ -8119,11 +8257,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
           $("#bgToggle")[0].innerText = this.isBackground === true ? "On" : "Off";
 
           const zoom = canvas.getZoom();
-          const top = this.top * zoom + canvas.viewportTransform[5] - 60;
-          const left =
+          let top = this.top * zoom + canvas.viewportTransform[5] - 60;
+          let left =
             (this.left + (this.width / 2) * this.scaleX) * zoom +
             canvas.viewportTransform[4] -
             180;
+
+          if(top < 0) top = 20;
+          if(left < -50) left = -50;
+          if(left > 1010) left = 1010;
 
           $("#edit-form").css({
             visibility: "visible",
@@ -8135,96 +8277,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
       });
 
-      obj.on("moving", function (options) {
-        if(this.snap && this.isDrop != true) {
-          const _this = this;
-          options = options.transform;
-          // Sets corner position coordinates based on current angle, width and height
-          objectSnapCanvas(this);
-
-          const o1 = {
-            x: this.top + this.height / 2,
-            y: this.left + this.width / 2,
-          };
-
-          // Loop through objects
-          canvas.forEachObject(function (obj) {
-            if(obj === _this || (obj.name && obj.name === "port")) return;
-
-            const o2 = {
-              x: obj.top + obj.height / 2,
-              y: obj.left + obj.width / 2,
-            };
-            // drag drop quiz handle add - Kiet
-            if(Math.sqrt((o1.x - o2.x) ** 2 + (o1.y - o2.y) ** 2) < snap) {
-              if(_this.isDrag === true) {
-                if(obj.isDrop === true) {
-                  // create answer on correct snap
-                  if(_this.checked === false) {
-                    if(isMakingAnswer) {
-                      correctAnswerMatch.push(
-                        _this.answerId + "-" + obj.answerId
-                      );
-                      console.log(correctAnswerMatch);
-                    } else if(isDoQuiz) {
-                      userResult.push(_this.answerId + "-" + obj.answerId); // write user result
-                    }
-                    _this.checked = true;
-                    _this.linkedId = obj.answerId;
-                    _this.top = o2.x - _this.height / 2;
-                    _this.left = o2.y - _this.width / 2;
-
-                    _this.playSound("snap");
-                  }
-                }
-              } else if(_this.isDrop === true) {
-                // do nothing
-              } else {
-                _this.top = o2.x - _this.height / 2;
-                _this.left = o2.y - _this.width / 2;
-
-                _this.playSound("snap");
-              }
-            } else {
-              if(_this.isDrag === true) {
-                if(_this.checked === true) {
-                  if(_this.linkedId === obj.answerId) {
-                    _this.checked = false;
-                    if(isMakingAnswer) {
-                      var index = correctAnswerMatch.findIndex(
-                        (x) => x === _this.answerId + "-" + _this.linkedId
-                      );
-                      correctAnswerMatch.splice(index, 1);
-                    }
-                    if(isDoQuiz) {
-                      var index = userResult.findIndex(
-                        (x) => x === _this.answerId + "-" + _this.linkedId
-                      );
-                      userResult.splice(index, 1);
-                    }
-                    console.log(correctAnswerMatch);
-                  }
-                }
-              }
-            }
-
-            if(isMakingAnswer) {
-              correctAnswerBox.text = correctAnswerMatch
-                .map((item) => item)
-                .join(", ");
-            } else if(isDoQuiz) {
-              userAnswerBox.text = userResult.map((item) => item).join(", ");
-            }
-          });
-
-          this.setCoords();
-        }
-
-        console.log("obj moving");
-
-        if($("#edit-form")[0].style.visibility === "visible") {
-          hidePopupMenu();
-        }
+      obj.on("moving", function () {
+        matchOjbMoving(obj);
       });
 
       changeCoordinateConnectLine(obj);
@@ -9203,8 +9257,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
       });
     }
 
-    function imageQuizMatchMode(e, value, isDrag) {
-      fabric.Image.fromURL(e.target.result, function (img) {
+    function imageQuizMatchMode(url, value, isDrag, id = randomID()) {
+      fabric.Image.fromURL(url, function (img) {
         //i create an extra var for to change some image properties
         const maxWidth = 600;
         const maxHeight = 400;
@@ -9224,18 +9278,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
         img.name = "quiz-matchObj";
         img.isDrag = true;
         img.answerId = value;
+        img.objectID = id;
 
         setDefaultAttributes(img);
         startActiveObject(img);
 
         canvas.add(img);
 
-        isLoadDataLocal = false;
-        emitEvent(img);
+        // isLoadDataLocal = false;
+        // emitEvent(img);
 
         canvas.sendToBack(img);
         canvas.requestRenderAll();
       });
+      return id;
     }
 
     function createTextBoxFooter(obj, size) {
@@ -9974,32 +10030,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
           });
         }
         // play variables
-        isCreateQuiz = false;
-        isCreateAnswer = false;
-        correctAnswers = [];
-        userAnswers = [];
-        isViewAnswer = false;
-        isMakingAnswer = false;
-        isDoQuiz = false;
-        isChecked = false;
-        readyCheck = false;
-        isCreateDoquiz = false;
+        // isCreateQuiz = false;
+        // isCreateAnswer = false;
+        // correctAnswers = [];
+        // userAnswers = [];
+        // isViewAnswer = false;
+        // isMakingAnswer = false;
+        // isDoQuiz = false;
+        // isChecked = false;
+        // readyCheck = false;
+        // isCreateDoquiz = false;
       } else {
         quizMode = false;
       }
-    });
-
-    $("#quizs-body").on("change", function() {
-      isCreateQuiz = false;
-      isCreateAnswer = false;
-      correctAnswers = [];
-      userAnswers = [];
-      isViewAnswer = false;
-      isMakingAnswer = false;
-      isDoQuiz = false;
-      isChecked = false;
-      readyCheck = false;
-      isCreateDoquiz = false;
     });
 
     $("#quiz-create").on("click", function () {
@@ -10013,12 +10056,22 @@ window.addEventListener('DOMContentLoaded', (event) => {
           "pointer-events": "auto",
         });
       } else {
-        $("#quizs-body li:nth-child(n+4):nth-child(-n+6)").css({
+        $("#quizs-body li:nth-child(n+4)").css({
           opacity: "1",
           "pointer-events": "auto",
         });
       }
+      // socket.emit("startQuiz", { quizType });
     });
+
+    // socket.on("startQuiz", function(data) {
+    //   if (!$("#quiz").hasClass("active")) {
+    //     $("#quiz")[0].click();
+    //   }
+    //   $("#quiz-type").val(data.quizType).change();
+    //   $("#quiz-create")[0].click();
+    // });
+
     $("#quiz-save").on("click", function () {
       $("#quiz-create").css({ opacity: "1", "pointer-events": "auto" });
       $("#quizs-body li:nth-child(n+4):nth-child(-n+10)").css({
@@ -10027,9 +10080,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
       });
     });
 
-    $("#quiz-type").on("change", function () {
-      canvas.clear();
-
+    function changeQuizFunc(quizType) {
       isCreateQuiz = false;
       isCreateAnswer = false;
       correctAnswers = [];
@@ -10041,7 +10092,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
       readyCheck = false;
       isCreateDoquiz = false;
 
-      var quizType = this.value;
       if(quizType == "quiz-1") {
         $("#open-quiz-modal")[0].style.display = "block";
         $("#create-table-empty")[0].style.display = "none";
@@ -10074,6 +10124,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
         opacity: "0.5",
         "pointer-events": "none",
       });
+    }
+
+    $("#quiz-type").on("change", function () {
+      changeQuizFunc(this.value)
+
+      socket.emit("changeQuizType", { quizType: this.value });
+    });
+
+    socket.on("changeQuizType", function(data) {
+      if (!$("#quiz").hasClass("active")) {
+        $("#quiz")[0].click();
+      }
+      $("#quiz-type").val(data.quizType);
+      changeQuizFunc(data.quizType)
     });
 
     $("#font li").click(function () {
@@ -10672,7 +10736,39 @@ window.addEventListener('DOMContentLoaded', (event) => {
         });
         this.innerText = "On";
       }
+      socket.emit("objVessel", { id: activeObject.objectID, value: activeObject.lockMovementX });
       canvas.requestRenderAll();
+    });
+
+    socket.on("objVessel", function (data) {
+      canvas.forEachObject(o => {
+        if (o.objectID === data.id) {
+          if (data.value) {
+            if(o.isDrag === true) {
+              o.set({
+                isDrag: false,
+                isDrop: true,
+              });
+              repositionDragDrop();
+            }
+            o.set({
+              lockMovementX: true,
+              lockMovementY: true,
+            });
+          } else {
+            if(o.isDrop === true) {
+              o.set({
+                isDrag: true,
+                isDrop: false,
+              });
+            }
+            o.set({
+              lockMovementX: false,
+              lockMovementY: false,
+            });
+          }
+        }
+      })
     });
 
     $("#bgToggle").on("click", function () {
@@ -12570,7 +12666,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         startActiveObject(group);
 
         canvas.add(group);
-        // return group;
+        return group;
       }
 
       function answerRect(e) {
@@ -12595,7 +12691,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
           });
         });
 
-        createAnswerTextBox(rect);
+        return createAnswerTextBox(rect);
       }
 
       function loadQuiz(data) {
@@ -12607,11 +12703,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
         isCreateAnswer = true;
 
         var quizType = data.gameType;
-        $("#quiz-type").val(data.gameType).change();
-        // var quizTypeCurrent = $("#quiz-type").val();
-        // if(quizType != quizTypeCurrent) {
-        //   alert("Invalid Quiz game type!");
-        // }
+        // $("#quiz-type").val(data.gameType);
+        var quizTypeCurrent = $("#quiz-type").val();
+        if(quizType != quizTypeCurrent) {
+          alert("Invalid Quiz game type!");
+        }
 
         const canvasObj = JSON.parse(data.canvas);
 
@@ -12630,6 +12726,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
                       fixed: true,
                       soundSelected: quizSetting.selectSound,
                       soundUnselected: quizSetting.selectSound,
+                    });
+                    obj._objects[0].set({
+                      fill: obj.colorUnselected,
+                    });
+                    obj._objects[1].set({
+                      fill: obj.colorText,
                     });
 
                     tableObjs.push(obj);
@@ -12777,9 +12879,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         if(child.text == "Answer Correct") {
                           createQuizTextBox(obj, true, false);
                         }
-                        if(child.text == "User Answer") {
-                          createQuizTextBox(obj, false, true);
-                        }
+                        // if(child.text == "User Answer") {
+                        //   createQuizTextBox(obj, false, true);
+                        // }
                       });
                     }
                     startActiveObject(obj);
@@ -12887,7 +12989,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
           pool_data = pool_data.filter(
             (obj) => obj.layer !== canvas.id || obj.data.name === "grid"
           );
-          // pool_data = []
+          pool_data = []
           socket.emit("update", pool_data);
           canvas.clear();
           loadLayerCanvasJsonNew(pool_data, canvas);
@@ -12904,29 +13006,55 @@ window.addEventListener('DOMContentLoaded', (event) => {
       };
 
       socket.on("loadQuiz", function (data) {
+        // $("#quiz")[0].click();
         loadQuiz(data);
+        $("#quiz-create").css({ opacity: "0.5", "pointer-events": "none" });
+        $("#quizs-body li:nth-child(n+4):nth-child(-n+5)").css({
+          opacity: "0.5",
+          "pointer-events": "none",
+        });
+        $("#quizs-body li:nth-child(n+7)").css({
+          opacity: "1",
+          "pointer-events": "auto",
+        });
       })
 
       dndItem.onchange = function (e) {
         var files = e.target.files,
           imageType = /image.*/;
+        const promises = [];
         for(const file of files) {
-          if(!file.type.match(imageType)) return;
-
-          function handleEvent(value, isDrag) {
-            return function (e) {
-              imageQuizMatchMode(e, value, isDrag);
+          let filePromise = new Promise(resolve => {
+            if(!file.type.match(imageType)) return;
+            
+            countItem++;
+            var value = countItem;
+            var reader = new FileReader();
+            reader.onload = (e) => {
+              const id = imageQuizMatchMode(e.target.result, value, true);
+              return resolve({ id, value, url: e.target.result });
             };
-          }
-          countItem++;
-          var value = countItem;
-          var reader = new FileReader();
-          reader.onload = handleEvent(value, true);
-          reader.readAsDataURL(file);
+            reader.readAsDataURL(file);
+          });
+          promises.push(filePromise);
         }
 
+        Promise.all(promises).then(data => {
+          console.log("emit dndItem", data);
+          socket.emit("dndItem", data);
+        });
+
         e.target.value = "";
+        isCreateQuiz = true;
       };
+
+      socket.on("dndItem", function (data) {
+        console.log("on dndItem", {data});
+        data.forEach(item => {
+          imageQuizMatchMode(item.url, item.value, true, item.id);
+        })
+        isCreateQuiz = true;
+      });
 
       $("#create-table-empty").on("click", function (e) {
         if(questions.length > 0) questions = [];
@@ -12981,23 +13109,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
       }
 
       $("#question-submit").on("click", function () {
-        $(".btn-eraser-clear")[0].click();
-        $("#change-eraser")[0].click();
-        $("#reset")[0].click();
+        // $(".btn-eraser-clear")[0].click();
+        // $("#change-eraser")[0].click();
+        // $("#reset")[0].click();
+        $("#quiz-modal")[0].style.display = "none";
 
         let questionValue = $("#question-input").val();
         createQuiz(questionValue);
         socket.emit("createQuiz", questionValue);
-        $("#quiz-modal")[0].style.display = "none";
       });
 
       socket.on("createQuiz", function (data) {
         createQuiz(data);
-        $("#quiz")[0].click();
+        if (!$("#quiz").hasClass("active")) {
+          $("#quiz")[0].click();
+        }
       });
 
-      function answerQuizFunc() {
+      function answerQuizFunc(id) {
         var quizType = $("#quiz-type").val();
+        console.log(id, isCreateQuiz, isCreateAnswer);
         if(isCreateQuiz && !isCreateAnswer) {
           const title = new fabric.Text("Answer Correct", {
             top: 0,
@@ -13024,10 +13155,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
           canvas.add(group);
 
-          if(quizType == "quiz-2") {
+          if(quizType == "quiz-2" || quizType === "quiz-3") {
             table = createTable([]);
           }
         }
+
+        var object;
 
         if(
           !isChecked &&
@@ -13068,13 +13201,22 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 (obj) => obj.name != "quiz-inputObj"
               );
 
-              answerRect();
+              object = answerRect();
+              if (id) {
+                object.set({
+                  objectID: id
+                });
+              }
             } else {
               canvas._objects.forEach((obj) => {
                 if(obj.name == "quiz-inputObj") {
                   obj.fixed = true;
                   obj.item(1).text = "";
                 }
+              });
+              $("#quizs-body li:nth-child(n+4)").css({
+                opacity: "1",
+                "pointer-events": "auto",
               });
             }
           }
@@ -13108,23 +13250,40 @@ window.addEventListener('DOMContentLoaded', (event) => {
                           </span>
                       `;
         }
+
+        return object;
       }
 
       var matchQuizData;
       answerQuiz.onclick = function () {
         isMakingAnswer = !isMakingAnswer;
-        answerQuizFunc();
+        const object = answerQuizFunc();
         isCreateAnswer = true;
 
         console.log("emit event: answerQuiz");
-        socket.emit("answerQuiz", { isCreateAnswer, isMakingAnswer });
+        socket.emit("answerQuiz", { isCreateAnswer, isMakingAnswer, id: object?.objectID });
         canvas.requestRenderAll();
       };
 
       socket.on("answerQuiz", function (data) {
         console.log("on event: answerQuiz", data);
+        if (!$("#quiz").hasClass("active")) {
+          $("#quiz")[0].click();
+        }
+
+
         isMakingAnswer = data.isMakingAnswer;
-        answerQuizFunc();
+        if ($("#quiz-type").val() === "quiz-2") {
+          $("#quiz-create").css({ opacity: "0.5", "pointer-events": "none" });
+          $("#quizs-body li:nth-child(n+4):nth-child(-n+10)").css({
+            opacity: "1",
+            "pointer-events": "auto",
+          });
+          isCreateQuiz = true;
+          answerQuizFunc(data.id);
+        } else {
+          answerQuizFunc();
+        }
         canvas.requestRenderAll();
         isCreateAnswer = true;
       });
@@ -13555,7 +13714,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
               // startingCanvas: matchQuizData.canvas,
               questions,
               correctAnswers: correctAnswers,
-              userAnswers: userAnswers,
+              // userAnswers: userAnswers,
               setting: quizSetting,
               gameType: quizType,
             };
@@ -13577,7 +13736,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
               canvas: JSON.stringify(canvas.toJSON(customAttributes)),
               questions,
               correctAnswers: correctAnswers,
-              userAnswers: userAnswers,
+              // userAnswers: userAnswers,
               setting: quizSetting,
               gameType: quizType,
             };
@@ -13601,7 +13760,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 startingCanvas: matchQuizData.canvas,
                 questions,
                 correctAnswers: correctAnswers,
-                userAnswers: userAnswers,
+                // userAnswers: userAnswers,
                 setting: quizSetting,
                 gameType: quizType,
               };
